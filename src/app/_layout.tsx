@@ -12,7 +12,6 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import LoginScreen from "./login";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,10 +31,19 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-  return <LoginScreen />;
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack
+        initialRouteName="/auth/welcome"
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="auth/welcome" options={{ animation: "none" }} />
+        <Stack.Screen
+          name="auth/login"
+          options={{
+            presentation: "modal",
+          }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
