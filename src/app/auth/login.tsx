@@ -1,125 +1,55 @@
-import {
-  Alert,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  TextInputProps,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { cn } from "@/lib/utils";
+import { SafeAreaView, ScrollView, Text } from "react-native";
 import React from "react";
-import { ThemedText } from "@/components/ThemedText";
+import { useLocalSearchParams } from "expo-router";
+import LoginForm from "@/components/login-form";
+import {
+  Card,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { router, useLocalSearchParams } from "expo-router";
-
-interface InputProps extends TextInputProps {
-  label: string;
-  iconSize?: number;
-  iconColor?: string;
-  icon?: React.ComponentProps<typeof Ionicons>["name"];
-  onPress?: () => void;
-}
-function InputGroup({
-  label,
-  icon,
-  iconSize = 18,
-  iconColor = "",
-  onPress,
-  ...inputProps
-}: InputProps) {
-  const [isFocused, setIsFocused] = React.useState(false);
-  const handleFocus = () => {
-    if (onPress) {
-      onPress();
-    }
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    if (onPress) {
-      onPress();
-    }
-    setIsFocused(false);
-  };
-
-  return (
-    <View className="mb-4 gap-2">
-      {!!label && (
-        <Text className="text-gray-500 text-sm font-semibold">{label}</Text>
-      )}
-      <View
-        className={cn(
-          "flex-row items-center border rounded-lg pl-2 pr-2 gap-2",
-          isFocused ? "border-blue-500" : "border-gray-300"
-        )}
-      >
-        {icon && <Ionicons name={icon} size={iconSize} color={iconColor} />}
-        <TextInput
-          pointerEvents={onPress ? "none" : "auto"}
-          {...inputProps}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className={cn("flex-1 h-10", inputProps.className)}
-        />
-      </View>
-    </View>
-  );
-}
+import { AvatarImage, Avatar } from "@/components/ui/avatar";
+import Spacer from "@/components/ui/spacer";
 
 export default function LoginScreen() {
   const params = useLocalSearchParams<{ type: "signin" | "singup" }>();
   const type = params.type ?? "signup";
 
-  let content = (
-    <>
-      <InputGroup
-        label="Email"
-        icon="mail"
-        placeholder="Enter your email address"
-        iconColor="gray"
-      />
-      <InputGroup
-        label="Password"
-        icon="lock-closed"
-        placeholder="Enter your password"
-        iconColor="gray"
-      />
-      <InputGroup
-        value="1/11/2005"
-        label="Your birth date"
-        icon="calendar"
-        iconColor="gray"
-        onPress={() => Alert.alert("Pick a date")}
-      />
-      <Text className="text-gray-500 text-sm">
-        By creating an account you agree to the{" "}
-        <ThemedText type="link">Term of Service</ThemedText> and{" "}
-        <ThemedText type="link">Privacy Policy.</ThemedText>
-      </Text>
-      <View className="flex-row items-center justify-between mt-3 gap-2">
-        <Button
-          className="w-20"
-          variant="secondary"
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Button.Text className="text-gray-600">Back</Button.Text>
-        </Button>
-        <Button className="w-20">
-          <Button.Text>Next</Button.Text>
-        </Button>
-      </View>
-    </>
-  );
+  let content = <LoginForm />;
 
   if (type === "signin") {
     content = (
-      <>
-        <Text>Choose your account</Text>
-      </>
+      <Card className="pt-3">
+        {[1, 2].map((_, i) => {
+          return (
+            <CardContent key={i} className="flex-1 items-start">
+              <Button
+                variant="ghost"
+                className="pl-0 pr-2 w-full  justify-start"
+              >
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                </Avatar>
+                <CardTitle className="leading-0">roth</CardTitle>
+                <CardDescription>roth.dev.bskh.socail</CardDescription>
+                <Spacer />
+                <Button.Icon name="arrow.forward" size={14} />
+              </Button>
+            </CardContent>
+          );
+        })}
+        <CardContent className="flex-1 items-start">
+          <Button variant="ghost" className="pl-0 pr-2 w-full  justify-start">
+            <Avatar className="items-center justify-center">
+              <Button.Icon name="plus" size={18} />
+            </Avatar>
+            <CardDescription>Other account</CardDescription>
+            <Spacer />
+            <Button.Icon name="arrow.forward" size={14} />
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
   return (

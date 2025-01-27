@@ -35,7 +35,7 @@ export interface IconSymbolProps {
  *
  * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
  */
-export function IconSymbol({ name, size = 24, color, style }: IconSymbolProps) {
+export function IconSymbol({ name, size = 18, color, style }: IconSymbolProps) {
   return (
     <MaterialIcons
       color={color}
