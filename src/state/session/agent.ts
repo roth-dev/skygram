@@ -35,7 +35,7 @@ export async function createAgentAndResume(
     event: AtpSessionEvent
   ) => void
 ) {
-  const agent = new BskhAppAgent({ service: storedAccount.service });
+  const agent = new BflyAppAgent({ service: storedAccount.service });
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl);
   }
@@ -82,7 +82,7 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent
   ) => void
 ) {
-  const agent = new BskhAppAgent({ service });
+  const agent = new BflyAppAgent({ service });
   await agent.login({
     identifier,
     password,
@@ -122,7 +122,7 @@ export async function createAgentAndCreateAccount(
     event: AtpSessionEvent
   ) => void
 ) {
-  const agent = new BskhAppAgent({ service });
+  const agent = new BflyAppAgent({ service });
   await agent.createAccount({
     email,
     password,
@@ -240,7 +240,7 @@ export function sessionAccountToSession(
 
 // Not exported. Use factories above to create it.
 let realFetch = globalThis.fetch;
-class BskhAppAgent extends AtpAgent {
+class BflyAppAgent extends AtpAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined;
 
@@ -310,4 +310,4 @@ class BskhAppAgent extends AtpAgent {
   }
 }
 
-export type { BskhAppAgent };
+export type { BflyAppAgent };

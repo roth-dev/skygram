@@ -9,7 +9,7 @@ import * as persisted from "@/state/persisted";
 import { emitSessionDropped } from "../events";
 import {
   agentToSessionAccount,
-  BskhAppAgent,
+  BflyAppAgent,
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
@@ -273,7 +273,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
   // @ts-expect-error window type is not declared, debug only
   if (__DEV__ && isWeb) window.agent = state.currentAgentState.agent;
 
-  const agent = state.currentAgentState.agent as BskhAppAgent;
+  const agent = state.currentAgentState.agent as BflyAppAgent;
   const currentAgentRef = React.useRef(agent);
   React.useEffect(() => {
     if (currentAgentRef.current !== agent) {
