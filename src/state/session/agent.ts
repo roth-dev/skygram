@@ -199,8 +199,10 @@ export function agentToSessionAccount(
   if (!agent.session) {
     return undefined;
   }
+
+  const serviceUrl = agent.serviceUrl;
   return {
-    service: agent.serviceUrl,
+    service: serviceUrl.host,
     did: agent.session.did,
     handle: agent.session.handle,
     email: agent.session.email,
