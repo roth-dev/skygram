@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.roth-dev.expo-deeplink"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +34,11 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization"
+      "expo-build-properties",
+      "expo-localization",
+      "expo-video",
+      "react-native-compressor",
+      "react-native-vision-camera"
     ],
     "experiments": {
       "typedRoutes": true
