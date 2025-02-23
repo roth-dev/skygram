@@ -96,6 +96,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
     async (params, logContext) => {
       addSessionDebugLog({ type: "method:start", method: "login" });
       const signal = cancelPendingTask();
+      console.log(params);
       const { agent, account } = await createAgentAndLogin(
         params,
         onAgentSessionChange
@@ -283,7 +284,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
       addSessionDebugLog({ type: "agent:switch", prevAgent, nextAgent: agent });
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose();
+      // prevAgent?.dispose();
+      console.log(prevAgent);
     }
   }, [agent]);
 

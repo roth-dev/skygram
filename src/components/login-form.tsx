@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/ui/button";
 import { router } from "expo-router";
@@ -69,44 +69,70 @@ function InputGroup({
   );
 }
 
-export default function LoginForm() {
+interface Props {
+  isLogin?: boolean;
+  onNextPress?: () => void;
+  onBackPress?: () => void;
+  onChangeEmail: (value: string) => void;
+  onChangePassword: (value: string) => void;
+}
+export default function LoginForm({
+  isLogin,
+  onBackPress,
+  onNextPress,
+  onChangeEmail,
+  onChangePassword,
+}: Props) {
   return (
     <>
       <InputGroup
+        onChangeText={onChangeEmail}
         label="Email"
         icon="mail"
         placeholder="Enter your email address"
         iconColor="gray"
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
       <InputGroup
+        onChangeText={onChangePassword}
         label="Password"
         icon="lock-closed"
         placeholder="Enter your password"
         iconColor="gray"
+        secureTextEntry
       />
-      <InputGroup
-        value="1/11/2005"
-        label="Your birth date"
-        icon="calendar"
-        iconColor="gray"
-        onPress={() => Alert.alert("Pick a date")}
-      />
-      <Text className="text-gray-500 text-sm">
-        By creating an account you agree to the{" "}
-        <ThemedText type="link">Term of Service</ThemedText> and{" "}
-        <ThemedText type="link">Privacy Policy.</ThemedText>
-      </Text>
+      {!isLogin && (
+        <>
+          <InputGroup
+            value="1/11/2005"
+            label="Your birth date"
+            icon="calendar"
+            iconColor="gray"
+            onPress={() => Alert.alert("Pick a date")}
+          />
+          <Text className="text-gray-500 text-sm">
+            By creating an account you agree to the{" "}
+            <ThemedText type="link">Term of Service</ThemedText> and{" "}
+            <ThemedText type="link">Privacy Policy.</ThemedText>
+          </Text>
+        </>
+      )}
       <View className="flex-row items-center justify-between mt-3 gap-2">
         <Button
           className="w-20"
           variant="secondary"
           onPress={() => {
-            router.back();
+            if (onBackPress) {
+              onBackPress();
+            } else {
+              router.back();
+            }
           }}
         >
           <Button.Text className="text-gray-600">Back</Button.Text>
         </Button>
-        <Button className="w-20">
+        <Button onPress={onNextPress} className="w-20">
           <Button.Text>Next</Button.Text>
         </Button>
       </View>

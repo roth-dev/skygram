@@ -1,4 +1,5 @@
 import "./globals.css";
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -12,11 +13,13 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { QueryProvider } from "@/lib/react-query";
+import { Provider as SessionProvider, useSession } from "@/state/session";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
@@ -46,5 +49,17 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+  );
+}
+
+export default function App() {
+  const { currentAccount } = useSession();
+
+  return (
+    <SessionProvider>
+      <QueryProvider currentDid={currentAccount?.did}>
+        <RootLayout />
+      </QueryProvider>
+    </SessionProvider>
   );
 }

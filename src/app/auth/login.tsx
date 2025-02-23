@@ -1,58 +1,91 @@
-import { SafeAreaView, ScrollView, Text } from "react-native";
-import React from "react";
+import { SafeAreaView, ScrollView, Text, TextInput } from "react-native";
+import React, { useCallback, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import LoginForm from "@/components/login-form";
-import {
-  Card,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AvatarImage, Avatar } from "@/components/ui/avatar";
-import Spacer from "@/components/ui/spacer";
 import BackButton from "@/components/button/back-button";
 import { useSession, useSessionApi } from "@/state/session";
+import { DEFAULT_SERVICE } from "@/constants";
+import { createFullHandle } from "@/lib/strings/handles";
+import { useServiceQuery } from "@/state/queries/service";
+import AccountList from "@/components/account/account-list";
 
 export default function LoginScreen() {
   const { login } = useSessionApi();
+  const { accounts } = useSession();
+  const {
+    data: serviceDescription,
+    error: serviceError,
+    refetch: refetchService,
+  } = useServiceQuery(DEFAULT_SERVICE);
   const params = useLocalSearchParams<{ type: "signin" | "singup" }>();
   const type = params.type ?? "signup";
 
-  let content = <LoginForm />;
+  const [addAccount, setAddAccount] = useState(false);
 
-  if (type === "signin") {
+  const identifierValueRef = useRef<string>("");
+  const passwordValueRef = useRef<string>("");
+  const authFactorTokenValueRef = useRef<string>("");
+  const passwordRef = useRef<TextInput>(null);
+
+  const onLogin = useCallback(() => {
+    const identifier = identifierValueRef.current.toLowerCase().trim();
+    const password = passwordValueRef.current;
+    const authFactorToken = authFactorTokenValueRef.current;
+    let fullIdent = identifier;
+    if (!serviceDescription) return;
+
+    if (
+      !identifier.includes("@") && // not an email
+      !identifier.includes(".")
+    ) {
+      let matched = false;
+      for (const domain of serviceDescription?.availableUserDomains) {
+        if (fullIdent.endsWith(domain)) {
+          matched = true;
+        }
+      }
+      if (!matched) {
+        fullIdent = createFullHandle(
+          identifier,
+          serviceDescription?.availableUserDomains[0]
+        );
+      }
+    }
+    login(
+      {
+        service: DEFAULT_SERVICE,
+        identifier: fullIdent,
+        password,
+        authFactorToken: authFactorToken.trim(),
+      },
+      "LoginForm"
+    )
+      .then((r) => console.log(r))
+      .catch((err) => console.log(err));
+  }, [
+    serviceDescription,
+    identifierValueRef,
+    authFactorTokenValueRef,
+    passwordValueRef,
+  ]);
+
+  let content = (
+    <LoginForm
+      onChangeEmail={(v) => (identifierValueRef.current = v)}
+      onChangePassword={(v) => (passwordValueRef.current = v)}
+    />
+  );
+
+  if (type === "signin" && accounts.length > 0 && !addAccount) {
+    content = <AccountList />;
+  } else if (addAccount) {
     content = (
-      <Card className="pt-3">
-        {[1, 2].map((_, i) => {
-          return (
-            <CardContent key={i} className="flex-1 items-start">
-              <Button
-                variant="ghost"
-                className="pl-0 pr-2 w-full  justify-start"
-              >
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                </Avatar>
-                <CardTitle className="leading-0">roth</CardTitle>
-                <CardDescription>roth.dev.bskh.socail</CardDescription>
-                <Spacer />
-                <Button.Icon name="arrow.forward" size={14} />
-              </Button>
-            </CardContent>
-          );
-        })}
-        <CardContent className="flex-1 items-start">
-          <Button variant="ghost" className="pl-0 pr-2 w-full  justify-start">
-            <Avatar className="items-center justify-center">
-              <Button.Icon name="plus" size={18} />
-            </Avatar>
-            <CardDescription>Other account</CardDescription>
-            <Spacer />
-            <Button.Icon name="arrow.forward" size={14} />
-          </Button>
-        </CardContent>
-      </Card>
+      <LoginForm
+        isLogin
+        onChangeEmail={(v) => (identifierValueRef.current = v)}
+        onChangePassword={(v) => (passwordValueRef.current = v)}
+        onNextPress={onLogin}
+      />
     );
   }
   return (
