@@ -12,8 +12,10 @@ import { Button } from "@/components/ui/button";
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import Spacer from "@/components/ui/spacer";
 import BackButton from "@/components/button/back-button";
+import { useSession, useSessionApi } from "@/state/session";
 
 export default function LoginScreen() {
+  const { login } = useSessionApi();
   const params = useLocalSearchParams<{ type: "signin" | "singup" }>();
   const type = params.type ?? "signup";
 
@@ -55,7 +57,7 @@ export default function LoginScreen() {
   }
   return (
     <SafeAreaView className="flex-1 ">
-      <BackButton className="  m-3 mb-0" />
+      <BackButton className="m-3 mb-0" />
       <ScrollView className="p-3 flex-1">
         <Text className="font-semibold text-2xl">
           {type === "singup" ? "Your account" : "Choose your account"}
