@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-deeplink",
-    "slug": "expo-deeplink",
+    "name": "butterfly",
+    "slug": "butterfly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.roth-dev.expo-deeplink"
+      "bundleIdentifier": "com.roth-dev.butterfly"
     },
     "android": {
       "adaptiveIcon": {

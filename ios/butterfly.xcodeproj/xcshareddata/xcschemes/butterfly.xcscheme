@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "expodeeplink.app"
-               BlueprintName = "expodeeplink"
-               ReferencedContainer = "container:expodeeplink.xcodeproj">
+               BuildableName = "butterfly.app"
+               BlueprintName = "butterfly"
+               ReferencedContainer = "container:butterfly.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "expodeeplinkTests.xctest"
-               BlueprintName = "expodeeplinkTests"
-               ReferencedContainer = "container:expodeeplink.xcodeproj">
+               BuildableName = "butterflyTests.xctest"
+               BlueprintName = "butterflyTests"
+               ReferencedContainer = "container:butterfly.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "expodeeplink.app"
-            BlueprintName = "expodeeplink"
-            ReferencedContainer = "container:expodeeplink.xcodeproj">
+            BuildableName = "butterfly.app"
+            BlueprintName = "butterfly"
+            ReferencedContainer = "container:butterfly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "expodeeplink.app"
-            BlueprintName = "expodeeplink"
-            ReferencedContainer = "container:expodeeplink.xcodeproj">
+            BuildableName = "butterfly.app"
+            BlueprintName = "butterfly"
+            ReferencedContainer = "container:butterfly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
