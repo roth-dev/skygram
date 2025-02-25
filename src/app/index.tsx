@@ -1,13 +1,26 @@
-import { Splash } from "@/components/SplashScreen";
-import ButterflyLogo from "assets/svg/logo";
-import { Redirect, Slot, useFocusEffect, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useSession } from "@/state/session";
+import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 
 export default function () {
-  const router = useRouter();
-  // useEffect(() => {
-  //   router.push("/auth/welcome");
-  // }, []);
-  return <Redirect href="/auth/welcome" />;
-  return <Slot />;
+  const [loading, setLoading] = useState(true);
+  const { currentAccount } = useSession();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <View className="flex-1" />;
+  }
+  if (!currentAccount) {
+    return <Redirect href="/(auth)/welcome" />;
+  }
+
+  return <Redirect href="/(tabs)" />;
 }
