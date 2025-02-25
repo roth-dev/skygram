@@ -1,5 +1,5 @@
 import React from "react";
-import AtpAgent, { AtpSessionEvent } from "@atproto/api";
+import { AtpSessionEvent, AtpAgent } from "@atproto/api";
 
 import { logEvent } from "@/statsig/statsig";
 import { isWeb } from "@/platform/detection";
@@ -43,6 +43,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime();
   const [state, dispatch] = React.useReducer(reducer, null, () => {
     const initialState = getInitialState(persisted.get("session").accounts);
+
     addSessionDebugLog({ type: "reducer:init", state: initialState });
     return initialState;
   });
@@ -96,7 +97,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
     async (params, logContext) => {
       addSessionDebugLog({ type: "method:start", method: "login" });
       const signal = cancelPendingTask();
-      console.log(params);
       const { agent, account } = await createAgentAndLogin(
         params,
         onAgentSessionChange
@@ -153,12 +153,12 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
         method: "resumeSession",
         account: storedAccount,
       });
+
       const signal = cancelPendingTask();
       const { agent, account } = await createAgentAndResume(
         storedAccount,
         onAgentSessionChange
       );
-
       if (signal.aborted) {
         return;
       }
@@ -284,8 +284,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
       addSessionDebugLog({ type: "agent:switch", prevAgent, nextAgent: agent });
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      // prevAgent?.dispose();
-      console.log(prevAgent);
+      prevAgent?.dispose();
     }
   }, [agent]);
 
