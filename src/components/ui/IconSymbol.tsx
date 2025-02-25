@@ -1,5 +1,6 @@
 // This file is a fallback for using MaterialIcons on Android and web.
 
+import { useThemeColor } from "@/hooks/useThemeColor";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SymbolWeight } from "expo-symbols";
 import React from "react";
@@ -36,13 +37,18 @@ export interface IconSymbolProps {
  * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
  */
 export function IconSymbol({ name, size = 18, color, style }: IconSymbolProps) {
+  const defaultColor = useThemeColor(
+    { light: "#000000", dark: "#ffffff" },
+    "icon"
+  );
   return (
     <MaterialIcons
-      color={color}
+      color={color ?? defaultColor}
       size={size}
       name={MAPPING[name]}
       // @ts-ignore
       style={style}
+      className="text-white"
     />
   );
 }
