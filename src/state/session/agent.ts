@@ -10,7 +10,7 @@ import {
 } from "@/constants";
 import { tryFetchGates } from "@/statsig/statsig";
 import { getAge } from "@/lib/strings/time";
-// import { logger } from "#/logger";
+// import { logger } from "@/logger";
 // import { snoozeEmailConfirmationPrompt } from "@/state/shell/reminders";
 // import { emitNetworkConfirmed, emitNetworkLost } from "../events";
 import { addSessionErrorLog } from "./logging";
@@ -21,10 +21,11 @@ import {
 import { SessionAccount } from "./types";
 import { isSessionExpired, isSignupQueued } from "./util";
 import { networkRetry } from "@/lib/async/retry";
+import { emitNetworkConfirmed, emitNetworkLost } from "../events";
 
 export function createPublicAgent() {
   configureModerationForGuest(); // Side effect but only relevant for tests
-  return new AtpAgent({ service: PUBLIC_BSKY_SERVICE });
+  return new BflyAppAgent({ service: PUBLIC_BSKY_SERVICE });
 }
 
 export async function createAgentAndResume(
@@ -35,7 +36,7 @@ export async function createAgentAndResume(
     event: AtpSessionEvent
   ) => void
 ) {
-  const agent = new BflyAppAgent({ service: storedAccount.service });
+  const agent = new BflyAppAgent({ service: "https://bsky.social/" });
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl);
   }
@@ -49,6 +50,7 @@ export async function createAgentAndResume(
     if (!storedAccount.signupQueued) {
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
+          console.log(`Error: ${e}`);
           // logger.error(`networkRetry failed to resume session`, {
           //   status: e?.status || "unknown",
           //   // this field name is ignored by Sentry scrubbers
@@ -257,11 +259,11 @@ class BflyAppAgent extends AtpAgent {
           success = false;
           throw e;
         } finally {
-          // if (success) {
-          //   emitNetworkConfirmed();
-          // } else {
-          //   emitNetworkLost();
-          // }
+          if (success) {
+            emitNetworkConfirmed();
+          } else {
+            emitNetworkLost();
+          }
         }
       },
       persistSession: (event: AtpSessionEvent) => {
