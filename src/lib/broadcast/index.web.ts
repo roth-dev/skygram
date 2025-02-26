@@ -1,2 +1,8 @@
 import Stub from "@/lib/broadcast/stub";
-export default "BroadcastChannel" in window ? window.BroadcastChannel : Stub;
+
+const Broadcast =
+  typeof window !== "undefined" && "BroadcastChannel" in window
+    ? window.BroadcastChannel
+    : Stub;
+
+export default Broadcast;
