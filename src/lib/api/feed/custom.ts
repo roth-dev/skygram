@@ -12,7 +12,7 @@ import {
 import { FeedAPI, FeedAPIResponse } from "./types";
 import { createBskyTopicsHeader, isBlueskyOwnedFeed } from "./utils";
 
-const contentLangs = "en";
+const contentLangs = "en,km";
 
 export class CustomFeedAPI implements FeedAPI {
   agent: AtpAgent;
