@@ -10,7 +10,7 @@ import { updateActiveVideoViewAsync } from "@haileyok/bluesky-video";
 import { useAnimatedScrollHandler } from "@/hooks/useAnimatedScrollHandler_FIXED";
 import { useDedupe } from "@/hooks/useDedupe";
 import { useScrollHandlers } from "@/lib/ScrollContext";
-// import { addStyle } from "#/lib/styles";
+// import { addStyle } from "@/lib";
 import { isAndroid, isIOS } from "@/platform/detection";
 // import { useLightbox } from "#/state/lightbox";
 // import { useTheme } from "#/alf";
@@ -178,6 +178,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
   }
 );
 List.displayName = "List";
-
+//@ts-ignore
 List = memo(List);
+
 export { List };
