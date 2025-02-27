@@ -3,7 +3,7 @@ import { Text as BaseText } from "react-native";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-const textVariants = cva("dark:text-white text-black", {
+const textVariants = cva("dark:text-white text-black leading-none", {
   variants: {
     size: {
       xs: "text-xs",
@@ -30,7 +30,7 @@ const textVariants = cva("dark:text-white text-black", {
   },
 });
 
-interface TextProps
+export interface TextProps
   extends React.ComponentPropsWithoutRef<typeof BaseText>,
     VariantProps<typeof textVariants> {}
 
