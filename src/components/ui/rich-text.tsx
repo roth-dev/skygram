@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
-import { Linking, TextProps, TextStyle } from "react-native";
+import { Linking, TextStyle } from "react-native";
 import { AppBskyRichtextFacet, RichText as RichTextAPI } from "@atproto/api";
-import { Text } from "./text";
+import { Text, TextProps } from "./text";
+import { router } from "expo-router";
 
 export interface RichTextProps extends TextProps {
   value: string | RichTextAPI;
@@ -61,9 +62,10 @@ export function RichText({
           font="semiBold"
           className="text-blue-500 underline"
           suppressHighlighting
-          onPress={() =>
-            onLinkPress ? onLinkPress(`/profile/${mention.did}`) : null
-          }
+          {...props}
+          onPress={() => {
+            router.push(`/(public)/user-profile/${mention.did}`);
+          }}
         >
           {text}
         </Text>
@@ -76,6 +78,7 @@ export function RichText({
           style={interactiveStyle}
           suppressHighlighting
           className="text-blue-500 underline"
+          {...props}
           onPress={() =>
             onLinkPress ? onLinkPress(link.uri) : Linking.openURL(link.uri)
           }
@@ -95,6 +98,7 @@ export function RichText({
           style={interactiveStyle}
           suppressHighlighting
           className="text-purple-500 underline"
+          {...props}
           onPress={() =>
             onLinkPress ? onLinkPress(`/search/${tag.tag}`) : null
           }
