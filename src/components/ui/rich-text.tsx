@@ -57,10 +57,10 @@ export function RichText({
       elements.push(
         <Text
           key={key}
-          style={[
-            interactiveStyle,
-            { color: "blue", textDecorationLine: "underline" },
-          ]}
+          style={[interactiveStyle]}
+          font="semiBold"
+          className="text-blue-500 underline"
+          suppressHighlighting
           onPress={() =>
             onLinkPress ? onLinkPress(`/profile/${mention.did}`) : null
           }
@@ -72,10 +72,10 @@ export function RichText({
       elements.push(
         <Text
           key={key}
-          style={[
-            interactiveStyle,
-            { color: "blue", textDecorationLine: "underline" },
-          ]}
+          numberOfLines={1}
+          style={interactiveStyle}
+          suppressHighlighting
+          className="text-blue-500 underline"
           onPress={() =>
             onLinkPress ? onLinkPress(link.uri) : Linking.openURL(link.uri)
           }
@@ -92,10 +92,9 @@ export function RichText({
       elements.push(
         <Text
           key={key}
-          style={[
-            interactiveStyle,
-            { color: "purple", textDecorationLine: "underline" },
-          ]}
+          style={interactiveStyle}
+          suppressHighlighting
+          className="text-purple-500 underline"
           onPress={() =>
             onLinkPress ? onLinkPress(`/search/${tag.tag}`) : null
           }
