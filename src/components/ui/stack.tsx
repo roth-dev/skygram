@@ -15,7 +15,11 @@ const HStack = React.forwardRef<
   React.ElementRef<typeof View>,
   React.ComponentPropsWithoutRef<typeof View>
 >(({ className, ...props }, ref) => (
-  <View ref={ref} {...props} className={cn("flex flex-row gap-2", className)} />
+  <View
+    ref={ref}
+    {...props}
+    className={cn("flex flex-row gap-2 items-center", className)}
+  />
 ));
 
 HStack.displayName = "HStack";
