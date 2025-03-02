@@ -15,6 +15,8 @@ import { isAndroid, isIOS } from "@/platform/detection";
 // import { useLightbox } from "#/state/lightbox";
 // import { useTheme } from "#/alf";
 import { FlatList_INTERNAL } from "./Views";
+import { useTheme } from "@react-navigation/native";
+import { addStyle } from "@/lib/styles";
 
 export type ListMethods = FlatList_INTERNAL;
 export type ListProps<ItemT = any> = Omit<
@@ -58,8 +60,8 @@ let List = React.forwardRef<ListMethods, ListProps>(
     },
     ref
   ): React.ReactElement => {
+    const theme = useTheme();
     const isScrolledDown = useSharedValue(false);
-    // const t = useTheme();
     const dedupe = useDedupe(400);
     // const { activeLightbox } = useLightbox();
 
@@ -144,9 +146,10 @@ let List = React.forwardRef<ListMethods, ListProps>(
 
     let contentOffset;
     if (headerOffset != null) {
-      // style = addStyle(style, {
-      //   paddingTop: headerOffset,
-      // });
+      style = addStyle(style, {
+        paddingTop: headerOffset,
+      });
+
       contentOffset = { x: 0, y: headerOffset * -1 };
     }
 
@@ -164,7 +167,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
-        // indicatorStyle={t.scheme === "dark" ? "white" : "black"}
+        indicatorStyle={theme.dark ? "white" : "black"}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
