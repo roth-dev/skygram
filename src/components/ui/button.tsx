@@ -5,20 +5,22 @@ import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { Slot } from "expo-router";
 import { IconSymbol, IconSymbolProps } from "./IconSymbol";
 import { Text, TextProps } from "./text";
+import { isWeb } from "@/platform/detection";
 
 const buttonVariants = cva(
-  "flex-row inline-flex bg-white dark:bg-neutral-950 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  isWeb
+    ? "flex-row inline-flex bg-white dark:bg-slate-900 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+    : "flex-row inline-flex bg-white dark:bg-slate-900 items-center justify-center gap-2 rounded-md ",
   {
     variants: {
       variant: {
-        default:
-          "bg-blue-500 text-primary-foreground web:shadow-sm hover:bg-blue-400",
+        default: "bg-blue-500 text-primary-foreground hover:bg-blue-400",
         destructive:
-          "bg-destructive text-destructive-foreground web:shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background web:shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-neutral-200 text-secondary-foreground web:shadow-sm hover:bg-secondary/80 dark:border dark:border-white",
+          "bg-neutral-200 text-secondary-foreground hover:bg-secondary/80 dark:border dark:border-white",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -52,7 +54,7 @@ const Button = ({
   const Comp = asChild ? Slot : TouchableOpacity;
 
   return (
-    <TouchableOpacity
+    <Comp
       // ref={ref}
       {...props}
       className={cn(buttonVariants({ variant, size, className }))}
