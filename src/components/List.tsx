@@ -17,6 +17,7 @@ import { isAndroid, isIOS } from "@/platform/detection";
 import { FlatList_INTERNAL } from "./Views";
 import { useTheme } from "@react-navigation/native";
 import { addStyle } from "@/lib/styles";
+import { useBottomBarOffset } from "@/hooks/useBottomBarOffset";
 
 export type ListMethods = FlatList_INTERNAL;
 export type ListProps<ItemT = any> = Omit<
@@ -63,6 +64,8 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const theme = useTheme();
     const isScrolledDown = useSharedValue(false);
     const dedupe = useDedupe(400);
+
+    const paddingBottom = useBottomBarOffset();
     // const { activeLightbox } = useLightbox();
 
     function handleScrolledDownChange(didScrollDown: boolean) {
@@ -145,7 +148,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     }
 
     let contentOffset;
-    if (headerOffset != null) {
+    if (!!headerOffset) {
       style = addStyle(style, {
         paddingTop: headerOffset,
       });
@@ -162,6 +165,10 @@ let List = React.forwardRef<ListMethods, ListProps>(
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
         }
+        contentContainerStyle={[
+          { paddingBottom: paddingBottom },
+          props.contentContainerStyle,
+        ]}
         scrollIndicatorInsets={{
           top: headerOffset,
           right: 1,
