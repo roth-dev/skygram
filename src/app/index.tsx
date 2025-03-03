@@ -19,11 +19,7 @@ export default function () {
   }, []);
 
   if (!ready) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ButterflyLogo fill="blue" />
-      </View>
-    );
+    return <View className="flex-1" />;
   }
 
   if (!currentAccount) {
