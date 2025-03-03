@@ -62,7 +62,8 @@ function InputGroup({
           {...inputProps}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={cn("flex-1 h-10", inputProps.className)}
+          className={cn("flex-1 h-10 dark:text-white text-white")}
+          style={{ outline: "none" }}
         />
       </View>
     </View>
