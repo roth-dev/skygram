@@ -8,7 +8,7 @@ const View = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <BaseView
     ref={ref}
-    className={cn("dark:bg-neutral-950 bg-white", className)}
+    className={cn("dark:bg-primary bg-white", className)}
     {...props}
   />
 ));
