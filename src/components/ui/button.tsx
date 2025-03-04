@@ -9,8 +9,8 @@ import { isWeb } from "@/platform/detection";
 
 const buttonVariants = cva(
   isWeb
-    ? "flex-row inline-flex bg-white dark:bg-slate-900 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-    : "flex-row inline-flex bg-white dark:bg-slate-900 items-center justify-center gap-2 rounded-md ",
+    ? "flex-row inline-flex bg-white dark:bg-primary items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+    : "flex-row inline-flex bg-white dark:bg-primary items-center justify-center gap-2 rounded-md",
   {
     variants: {
       variant: {
