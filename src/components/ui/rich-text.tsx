@@ -64,7 +64,7 @@ export function RichText({
           suppressHighlighting
           {...props}
           onPress={() => {
-            router.push(`/(public)/user-profile/${mention.did}`);
+            router.push(`/user-profile/${mention.did}`);
           }}
         >
           {text}
@@ -99,9 +99,12 @@ export function RichText({
           suppressHighlighting
           className="text-purple-500 underline"
           {...props}
-          onPress={() =>
-            onLinkPress ? onLinkPress(`/search/${tag.tag}`) : null
-          }
+          onPress={() => {
+            // router.push({
+            //   pathname: "/(app)/",
+            //   params: { tag: tag.tag },
+            // });
+          }}
         >
           {text}
         </Text>
