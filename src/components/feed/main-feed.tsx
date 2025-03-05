@@ -20,7 +20,7 @@ import PostFeedItem from "@/components/feed/post-feed-item";
 import { FeedRow } from "./type";
 import { useInitialNumToRender } from "@/hooks/useInitialNumToRender";
 
-export default function MainFeed(props: MainFeedProps) {
+export default memo(function MainFeed(props: MainFeedProps) {
   const {
     feed,
     feedParams,
@@ -404,4 +404,4 @@ export default function MainFeed(props: MainFeedProps) {
       />
     </View>
   );
-}
+});
