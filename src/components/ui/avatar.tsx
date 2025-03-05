@@ -10,11 +10,11 @@ const Avatar = React.forwardRef<View, ViewProps>(
     return (
       <View
         ref={ref}
+        {...props}
         className={cn(
-          "relative bg-gray-200 flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+          "relative border-[0.5px] border-slate-200 bg-gray-200 flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
           className
         )}
-        {...props}
       />
     );
   }
