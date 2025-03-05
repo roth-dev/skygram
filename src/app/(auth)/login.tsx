@@ -37,7 +37,7 @@ export default function LoginScreen() {
   const onSelectAccount = useCallback(
     async (acc: SessionAccount) => {
       await resumeSession(acc);
-      router.replace("/(tabs)/home");
+      router.replace("/(app)/(home)");
     },
     [resumeSession]
   );
@@ -76,7 +76,7 @@ export default function LoginScreen() {
       "LoginForm"
     )
       .then((r) => {
-        router.replace("/(tabs)/home");
+        router.replace("/(app)/(home)");
       })
       .catch((err) => console.log(err));
   }, [
