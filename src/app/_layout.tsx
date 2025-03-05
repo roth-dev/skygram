@@ -1,8 +1,7 @@
 import "./globals.css";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
 import "react-native-reanimated";
+
+import { useEffect, useState } from "react";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { QueryProvider } from "@/lib/react-query";
@@ -12,6 +11,7 @@ import {
   useSession,
   useSessionApi,
 } from "@/state/session";
+import { Provider as ShellStateProvider } from "@/state/shell";
 import { Provider as ModerationProvider } from "@/state/prefs/moderation-opts";
 import { Provider as LabelDefsProvider } from "@/state/prefs/label-defs";
 import { Provider as PrefsStateProvider } from "@/state/prefs";
@@ -23,40 +23,10 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { router, Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  configureReanimatedLogger,
-  ReanimatedLogLevel,
-} from "react-native-reanimated";
-
-configureReanimatedLogger({
-  level: ReanimatedLogLevel.warn,
-  strict: false, // Reanimated runs in strict mode by default
-});
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-function Root() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-  return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </ThemeProvider>
-  );
-}
+import BottomTabProvider from "@/context/bottom-tab-provider";
+import GoogleFontProvider from "@/context/google-font-provider";
 
 function InnerApp() {
   const { currentAccount } = useSession();
@@ -84,18 +54,22 @@ function InnerApp() {
 
   return (
     <QueryProvider currentDid={currentAccount?.did}>
-      <LabelDefsProvider>
-        <ModerationProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Root />
-          </GestureHandlerRootView>
-        </ModerationProvider>
-      </LabelDefsProvider>
+      {/* <LabelDefsProvider> */}
+      <ModerationProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomTabProvider>
+            <Slot />
+          </BottomTabProvider>
+        </GestureHandlerRootView>
+      </ModerationProvider>
+      {/* </LabelDefsProvider> */}
     </QueryProvider>
   );
 }
 
 export default function App() {
+  const colorScheme = useColorScheme();
+
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
@@ -107,12 +81,18 @@ export default function App() {
   }
 
   return (
-    <SessionProvider>
-      <PrefsStateProvider>
-        <StatsigProvider>
-          <InnerApp />
-        </StatsigProvider>
-      </PrefsStateProvider>
-    </SessionProvider>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <GoogleFontProvider>
+        <SessionProvider>
+          <PrefsStateProvider>
+            <ShellStateProvider>
+              <StatsigProvider>
+                <InnerApp />
+              </StatsigProvider>
+            </ShellStateProvider>
+          </PrefsStateProvider>
+        </SessionProvider>
+      </GoogleFontProvider>
+    </ThemeProvider>
   );
 }
