@@ -1,38 +1,57 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
-
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Ionicons } from "@expo/vector-icons";
+import { Platform, useColorScheme } from "react-native";
 import { isIOS } from "@/platform/detection";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Ionicons } from "@expo/vector-icons";
+import { HapticTab } from "@/components/HapticTab";
+import BlurTabBarBackground from "@/components/ui/TabBarBackground.ios";
+import { Redirect, Tabs } from "expo-router";
+import { useEffect, useState } from "react";
+import { useSession } from "@/state/session";
+import { View } from "@/components/ui";
+import { Colors } from "@/constants/Colors";
 
-export default function TabLayout() {
+export default function RootTabs() {
   const colorScheme = useColorScheme();
+  const [ready, setReady] = useState(false);
+  const { currentAccount } = useSession();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setReady(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!ready) {
+    return <View className="flex-1" />;
+  }
+
+  if (!currentAccount) {
+    return <Redirect href="/(auth)/welcome" />;
+  }
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // headerShown: false,
+        headerShown: false,
+        tabBarShowLabel: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        tabBarBackground: BlurTabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
             position: isIOS ? "absolute" : undefined,
+            paddingTop: 5,
+            display: "none",
           },
           default: {},
         }),
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="(home)"
         options={{
-          title: "Feed",
           tabBarShowLabel: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
@@ -40,39 +59,32 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="(search)"
         options={{
-          tabBarLabel: "Search",
-          tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="search" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="post"
+        name="(post)"
         options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ size, color }) => (
-            <Ionicons name="add" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="add" size={32} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="video-feed"
+        name="(video-feed)"
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="videocam" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="(profile)"
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

@@ -1,10 +1,7 @@
 import { Stack } from "expo-router";
 
-export default function AuthLayout() {
+export default function () {
   return (
-    <Stack
-      initialRouteName="welcome"
-      screenOptions={{ headerShown: false, presentation: "modal" }}
-    />
+    <Stack screenOptions={{ headerShown: false, presentation: "modal" }} />
   );
 }

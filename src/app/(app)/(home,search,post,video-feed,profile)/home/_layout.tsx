@@ -1,5 +1,6 @@
 import Feed from "@/components/feed";
 import { HomeHeader } from "@/components/home/HomeHeader";
+import Layout from "@/components/Layout";
 import { Pager, PagerRef, RenderTabBarFnProps } from "@/components/pager/Pager";
 import { Text } from "@/components/ui";
 import { emitSoftReset } from "@/state/events";
@@ -7,6 +8,7 @@ import { usePinnedFeedsInfos } from "@/state/queries/feed";
 import { FeedParams } from "@/state/queries/post-feed";
 import { usePreferencesQuery } from "@/state/queries/prefs";
 import { useSetMinimalShellMode } from "@/state/shell/minimal-mode";
+import { Stack } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, SafeAreaView } from "react-native";
 
@@ -74,12 +76,14 @@ export default function HomeScreen() {
     [onPressSelected, pinnedFeedInfos]
   );
 
-  if (!preferences && !pinnedFeedInfos && isPinnedFeedsLoading) {
-    return <ActivityIndicator size="large" />;
-  }
-
-  return (
-    <SafeAreaView className="flex-1 bg-white">
+  let screen = (
+    <ActivityIndicator
+      size="large"
+      className="flex-1 items-center justify-center"
+    />
+  );
+  if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
+    screen = (
       <Pager
         key={allFeeds?.join(",")}
         ref={pagerRef}
@@ -112,6 +116,8 @@ export default function HomeScreen() {
             );
           })}
       </Pager>
-    </SafeAreaView>
-  );
+    );
+  }
+
+  return <Layout.Tab safeArea>{screen}</Layout.Tab>;
 }
