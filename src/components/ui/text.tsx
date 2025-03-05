@@ -1,9 +1,26 @@
 import React from "react";
-import { Text as BaseText } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text as BaseText } from "react-native";
 import { cva, VariantProps } from "class-variance-authority";
 
-const textVariants = cva("dark:text-white text-black leading-none", {
+// custom font family
+// Inter_400Regular,
+// Inter_900Black,
+// Inter_500Medium,
+// Inter_700Bold,
+// Inter_600SemiBold,
+// Inter_100Thin,
+// Inter_800ExtraBold,
+
+const FONTS = {
+  thin: "Inter_100Thin",
+  normal: "Inter_400Regular",
+  bold: "Inter_700Bold",
+  semiBold: "Inter_600SemiBold",
+  extrabold: "Inter_800ExtraBold",
+};
+
+const textVariants = cva("dark:text-white text-black", {
   variants: {
     size: {
       xs: "text-xs",
@@ -16,32 +33,34 @@ const textVariants = cva("dark:text-white text-black leading-none", {
       "4xl": "text-4xl",
       "5xl": "text-5xl",
     },
-    font: {
-      thin: "font-thin",
-      normal: "font-normal",
-      bold: "font-bold",
-      semiBold: "font-semibold",
-      extrabold: "font-extrabold",
-    },
   },
   defaultVariants: {
     size: "base",
-    font: "normal",
   },
 });
 
 export interface TextProps
   extends React.ComponentPropsWithoutRef<typeof BaseText>,
-    VariantProps<typeof textVariants> {}
+    VariantProps<typeof textVariants> {
+  font?: keyof typeof FONTS;
+}
 
 const Text = React.forwardRef<React.ElementRef<typeof BaseText>, TextProps>(
-  ({ className, size, font, ...props }, ref) => (
-    <BaseText
-      ref={ref}
-      className={cn(textVariants({ size, font }), className)}
-      {...props}
-    />
-  )
+  ({ className, size, font = "normal", ...props }, ref) => {
+    return (
+      <BaseText
+        ref={ref}
+        className={cn(textVariants({ size }), className, "leading-relaxed")}
+        {...props}
+        style={[
+          {
+            fontFamily: FONTS[font],
+          },
+          props.style,
+        ]}
+      />
+    );
+  }
 );
 
 Text.displayName = "Text";
