@@ -4,6 +4,7 @@ import { useProfileQuery } from "@/state/queries/profile";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import Layout from "@/components/Layout";
+import { sanitizeDisplayName } from "@/lib/strings/display-names";
 
 export default function () {
   const params = useLocalSearchParams<{ did: string }>();
@@ -18,6 +19,8 @@ export default function () {
   }
 
   return (
-    <Layout.Screen title={data?.displayName ?? ""}>{content}</Layout.Screen>
+    <Layout.Screen title={sanitizeDisplayName(data?.displayName ?? "")}>
+      {content}
+    </Layout.Screen>
   );
 }
