@@ -182,7 +182,7 @@ export function MainScrollProvider({ children }: PropsWithChildren) {
 const emitter = new EventEmitter();
 
 if (isWeb) {
-  const originalScroll = window.scroll;
+  const originalScroll = window?.scroll;
   window.scroll = function () {
     emitter.emit("forced-scroll");
     return originalScroll.apply(this, arguments as any);
