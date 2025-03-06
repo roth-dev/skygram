@@ -6,14 +6,10 @@ import {
   useSharedValue,
 } from "react-native-reanimated";
 import { updateActiveVideoViewAsync } from "@haileyok/bluesky-video";
-
 import { useAnimatedScrollHandler } from "@/hooks/useAnimatedScrollHandler_FIXED";
 import { useDedupe } from "@/hooks/useDedupe";
 import { useScrollHandlers } from "@/lib/ScrollContext";
-// import { addStyle } from "@/lib";
 import { isAndroid, isIOS } from "@/platform/detection";
-// import { useLightbox } from "#/state/lightbox";
-// import { useTheme } from "#/alf";
 import { FlatList_INTERNAL } from "./Views";
 import { useTheme } from "@react-navigation/native";
 import { addStyle } from "@/lib/styles";
@@ -137,11 +133,10 @@ let List = React.forwardRef<ListMethods, ListProps>(
     if (refreshing !== undefined || onRefresh !== undefined) {
       refreshControl = (
         <RefreshControl
-          // key={t.atoms.text.color}
+          key={theme.colors.border}
           refreshing={refreshing ?? false}
           onRefresh={onRefresh}
-          // tintColor={t.atoms.text.color}
-          // titleColor={t.atoms.text.color}
+          tintColor={theme.colors.border}
           progressViewOffset={progressViewOffset ?? headerOffset}
         />
       );
@@ -178,7 +173,6 @@ let List = React.forwardRef<ListMethods, ListProps>(
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
-        // scrollsToTop={!activeLightbox}
         scrollEventThrottle={1}
         style={style}
         // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
