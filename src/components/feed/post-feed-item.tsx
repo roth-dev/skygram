@@ -11,7 +11,7 @@ import * as Webview from "expo-web-browser";
 import UserAvatar from "../UserAvatar";
 import { router } from "expo-router";
 import { Pressable } from "react-native";
-import Separetor from "../ui/sparetor";
+import Separetor from "../ui/separator";
 import MediaSlider from "../ImageSlider";
 import { formatNumberToKOrM } from "@/lib/numbers";
 
