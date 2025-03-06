@@ -6,6 +6,7 @@ import { Slot } from "expo-router";
 import { IconSymbol, IconSymbolProps } from "./IconSymbol";
 import { Text, TextProps } from "./text";
 import { isWeb } from "@/platform/detection";
+import LoadingSpinner from "../LoadingSpinner";
 
 const buttonVariants = cva(
   isWeb
@@ -42,6 +43,8 @@ export interface ButtonProps
   extends TouchableOpacityProps,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  isLoading?: boolean;
+  loadingColor?: string;
 }
 
 const Button = ({
@@ -49,16 +52,28 @@ const Button = ({
   variant,
   size,
   asChild = false,
+  isLoading = false,
+  loadingColor = "white",
+  disabled,
+  children,
   ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : TouchableOpacity;
 
   return (
     <Comp
-      // ref={ref}
       {...props}
-      className={cn(buttonVariants({ variant, size, className }))}
-    />
+      disabled={disabled || isLoading} // Disable button while loading
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        isLoading && "opacity-80"
+      )}
+    >
+      {children}
+      {!!isLoading && (
+        <LoadingSpinner color={loadingColor} durationMs={700} size={18} />
+      )}
+    </Comp>
   );
 };
 
