@@ -28,7 +28,8 @@ module.exports = function (api) {
             crypto: "./src/platform/crypto.ts",
           },
         },
-      ]
+      ], 
+      'react-native-reanimated/plugin'
     ],
   };
 };
