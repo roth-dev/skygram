@@ -3,7 +3,7 @@ import { useSession } from "@/state/session";
 import { useProfileQuery } from "@/state/queries/profile";
 import { View } from "@/components/ui";
 import UserProfile from "@/components/profile";
-import { Stack } from "expo-router";
+import Layout from "@/components/Layout";
 
 export default function Profile() {
   const { currentAccount } = useSession();
@@ -18,9 +18,8 @@ export default function Profile() {
   }
 
   return (
-    <>
-      <Stack.Screen options={{ headerLeft: undefined }} />
+    <Layout.Tab headerShown>
       <UserProfile isOwner profile={data} />
-    </>
+    </Layout.Tab>
   );
 }
