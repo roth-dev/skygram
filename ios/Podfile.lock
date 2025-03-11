@@ -21,6 +21,8 @@ PODS:
     - ExpoModulesCore
   - ExpoAsset (11.0.4):
     - ExpoModulesCore
+  - ExpoBlueskySwissArmy (1.0.0):
+    - ExpoModulesCore
   - ExpoBlur (14.0.3):
     - ExpoModulesCore
   - ExpoCamera (16.0.17):
@@ -109,6 +111,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ExpoScrollForwarder (1.0.0):
+    - ExpoModulesCore
   - ExpoSharing (13.0.1):
     - ExpoModulesCore
   - ExpoSplashScreen (0.29.22):
@@ -2054,7 +2058,7 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController (~> 2.7.4)
-  - RNReanimated (3.16.7):
+  - RNReanimated (3.17.0-nightly-20241211-17e89ca24):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2074,10 +2078,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.16.7)
-    - RNReanimated/worklets (= 3.16.7)
+    - RNReanimated/reanimated (= 3.17.0-nightly-20241211-17e89ca24)
+    - RNReanimated/worklets (= 3.17.0-nightly-20241211-17e89ca24)
     - Yoga
-  - RNReanimated/reanimated (3.16.7):
+  - RNReanimated/reanimated (3.17.0-nightly-20241211-17e89ca24):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2097,9 +2101,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.16.7)
+    - RNReanimated/reanimated/apple (= 3.17.0-nightly-20241211-17e89ca24)
     - Yoga
-  - RNReanimated/reanimated/apple (3.16.7):
+  - RNReanimated/reanimated/apple (3.17.0-nightly-20241211-17e89ca24):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2120,7 +2124,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.16.7):
+  - RNReanimated/worklets (3.17.0-nightly-20241211-17e89ca24):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/worklets/apple (= 3.17.0-nightly-20241211-17e89ca24)
+    - Yoga
+  - RNReanimated/worklets/apple (3.17.0-nightly-20241211-17e89ca24):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2267,6 +2293,7 @@ DEPENDENCIES:
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoBlueskySwissArmy (from `../modules/expo-bluesky-swiss-army/ios`)
   - ExpoBlur (from `../node_modules/expo-blur/ios`)
   - ExpoCamera (from `../node_modules/expo-camera/ios`)
   - ExpoClipboard (from `../node_modules/expo-clipboard/ios`)
@@ -2286,6 +2313,7 @@ DEPENDENCIES:
   - ExpoMediaLibrary (from `../node_modules/expo-media-library/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
+  - ExpoScrollForwarder (from `../modules/expo-scroll-forwarder/ios`)
   - ExpoSharing (from `../node_modules/expo-sharing/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - ExpoSymbols (from `../node_modules/expo-symbols/ios`)
@@ -2417,6 +2445,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoBlueskySwissArmy:
+    :path: "../modules/expo-bluesky-swiss-army/ios"
   ExpoBlur:
     :path: "../node_modules/expo-blur/ios"
   ExpoCamera:
@@ -2455,6 +2485,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-modules-core"
   ExpoScreenOrientation:
     :path: "../node_modules/expo-screen-orientation/ios"
+  ExpoScrollForwarder:
+    :path: "../modules/expo-scroll-forwarder/ios"
   ExpoSharing:
     :path: "../node_modules/expo-sharing/ios"
   ExpoSplashScreen:
@@ -2654,6 +2686,7 @@ SPEC CHECKSUMS:
   EXNotifications: a762c9647d87682e9822f5798ca6666b5a81e213
   Expo: 63515728b6f238842dc95702eb0fb385f00d7c5a
   ExpoAsset: 4033893dfb333b444bf45e951351254137b658d5
+  ExpoBlueskySwissArmy: 5e25b12d5bf78c62df0b7d082d3c4c038b509cfe
   ExpoBlur: 392c1207f71d0ecf22371621c1fbd44ba84d9742
   ExpoCamera: 166a23592a0133c162ea7334feb9e75e0231134b
   ExpoClipboard: 44fd1c8959ee8f6175d059dc011b154c9709a969
@@ -2673,6 +2706,7 @@ SPEC CHECKSUMS:
   ExpoMediaLibrary: 2709fc2e4fcf87d28767714abcc603c4bec228c6
   ExpoModulesCore: 7f5e59799b89e5fad1d7cc6070744c1003ca320f
   ExpoScreenOrientation: cef58b646fb961ceb163212d523b14fdb850d888
+  ExpoScrollForwarder: 945b1b6af96cc9ea8133b3f76c9b733966d26262
   ExpoSharing: 849a5ce9985c22598c16ec027e32969be8062e8e
   ExpoSplashScreen: 0f281e3c2ded4757d2309276c682d023c6299c77
   ExpoSymbols: f3002db15156cd4e505c77b6ea1df5c984db9965
@@ -2762,7 +2796,7 @@ SPEC CHECKSUMS:
   RNCPicker: cee1bca865d795657e931de5aad98b1650f3237b
   RNGestureHandler: 16ef3dc2d7ecb09f240f25df5255953c4098819b
   RNImageCropPicker: b0afedeefd8655254a15c34103718455fde6ce59
-  RNReanimated: a2692304a6568bc656c04c8ffea812887d37436e
+  RNReanimated: 64a32920bb2de101619b52b873f8d7c5dd6c4ad0
   RNScreens: 351f431ef2a042a1887d4d90e1c1024b8ae9d123
   RNSVG: 030717ff82ea8f2117347c2fcf52a2d1eafba9ba
   SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
