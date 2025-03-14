@@ -1,16 +1,17 @@
-import { Platform, useColorScheme } from "react-native";
+import { Easing, Platform, useColorScheme } from "react-native";
 import { isIOS } from "@/platform/detection";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Ionicons } from "@expo/vector-icons";
 import { HapticTab } from "@/components/HapticTab";
 import BlurTabBarBackground from "@/components/ui/TabBarBackground.ios";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useSession } from "@/state/session";
 import { View } from "@/components/ui";
 import { Colors } from "@/constants/Colors";
 
 export default function RootTabs() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const [ready, setReady] = useState(false);
   const { currentAccount } = useSession();
@@ -37,13 +38,14 @@ export default function RootTabs() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarButton: HapticTab,
+        tabBarButtonTestID: "bottomTab",
+        tabBarAccessibilityLabel: "mainTabBar",
         tabBarBackground: BlurTabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
             position: isIOS ? "absolute" : undefined,
             paddingTop: 5,
-            display: "none",
           },
           default: {},
         }),
@@ -68,6 +70,14 @@ export default function RootTabs() {
       />
       <Tabs.Screen
         name="(post)"
+        listeners={(e) => {
+          return {
+            tabPress: (e) => {
+              e.preventDefault();
+              // router.navigate("/(modal)/post");
+            },
+          };
+        }}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="add" size={32} color={color} />
@@ -90,6 +100,7 @@ export default function RootTabs() {
           ),
         }}
       />
+      <Tabs.Screen name="(modal)" options={{ href: null }} />
     </Tabs>
   );
 }
