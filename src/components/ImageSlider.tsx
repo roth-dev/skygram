@@ -1,16 +1,21 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   FlatListProps,
+  InteractionManager,
   ListRenderItemInfo,
-  Pressable,
   ViewabilityConfig,
   ViewToken,
 } from "react-native";
-import { HStack, Text, View } from "./ui";
+import { HStack, View } from "./ui";
 import { AppBskyEmbedImages } from "@atproto/api";
 import { Image } from "expo-image";
 import { cn } from "@/lib/utils";
+import { useLightboxControls } from "@/state/lightbox";
+import { AutoSizedImage } from "./AutoSizeImage";
+import { MeasuredDimensions, runOnJS, runOnUI } from "react-native-reanimated";
+import { Dimensions } from "./lightbox/ImageViewing/@types";
+import { HandleRef, measureHandle } from "@/hooks/useHandleRef";
 
 type ImageView = AppBskyEmbedImages.ViewImage;
 
@@ -20,13 +25,6 @@ type Props<T = any> = Omit<FlatListProps<T>, "data" | "renderItem"> & {
   initialIndex?: number;
   onImagePress?: (item: ImageView) => void;
 };
-
-interface ImageSliderProps {
-  width: number;
-  height: number;
-  uri: string;
-  index: number;
-}
 
 interface IndicatorProps {
   index: number;
@@ -49,27 +47,59 @@ function SliderIndicator({ indicator, index }: IndicatorProps) {
     </HStack>
   );
 }
-function ImageSlider({ width, height, uri }: ImageSliderProps) {
-  return (
-    <View style={{ width, height }}>
-      <Image
-        source={{ uri }}
-        contentFit="cover"
-        transition={500}
-        style={{ width: "100%", height: "100%" }}
-      />
-    </View>
-  );
-}
-
 const MediaSlider = ({ images, initialIndex, onImagePress }: Props) => {
+  const { openLightbox } = useLightboxControls();
+
   const [index, setIndex] = useState(0);
-  const [itemSize, setItemSize] = useState({
-    width: 0,
-    height: 0,
-  });
+
+  const dimensions = useRef<Dimensions>({ width: 0, height: 0 });
 
   const loaded = useRef(new Set([0]));
+
+  const items = useMemo(() => {
+    return images.map((img) => ({
+      uri: img.fullsize,
+      thumbUri: img.thumb,
+      alt: img.alt,
+      dimensions: img.aspectRatio ?? null,
+    }));
+  }, [images]);
+
+  const _openLightbox = useCallback(
+    (
+      thumbRects: (MeasuredDimensions | null)[],
+      fetchedDims: (Dimensions | null)[]
+    ) => {
+      openLightbox({
+        index,
+        images: items.map((item, i) => ({
+          ...item,
+          thumbRect: thumbRects[i],
+          thumbDimensions: fetchedDims[i] ?? null,
+          type: "image",
+        })),
+      });
+    },
+    [items, index]
+  );
+  const onPress = useCallback(
+    (refs: HandleRef, dims: Dimensions | null) => {
+      const handle = refs.current;
+      const rects = measureHandle(handle);
+
+      runOnUI(() => {
+        "worklet";
+        runOnJS(_openLightbox)([rects], [dims]);
+      })();
+    },
+    [_openLightbox]
+  );
+
+  const onPressIn = (_: number) => {
+    InteractionManager.runAfterInteractions(() => {
+      Image.prefetch(items.map((i) => i.uri));
+    });
+  };
 
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -82,6 +112,17 @@ const MediaSlider = ({ images, initialIndex, onImagePress }: Props) => {
     [loaded]
   );
 
+  const aspectRatio = useMemo(() => {
+    if (images.length > 0) {
+      const imgs = images as AppBskyEmbedImages.ViewImage[];
+      return (
+        (imgs[0].aspectRatio?.width ?? 1) / (imgs[0].aspectRatio?.height ?? 1)
+      );
+    }
+
+    return 1;
+  }, [images]);
+
   const viewabilityConfig: ViewabilityConfig = {
     itemVisiblePercentThreshold: 50,
   };
@@ -89,22 +130,29 @@ const MediaSlider = ({ images, initialIndex, onImagePress }: Props) => {
   const renderItem = useCallback(
     ({ index: idx, item }: ListRenderItemInfo<ImageView>) => {
       if (!loaded.current.has(idx)) {
-        return <View style={{ ...itemSize }} />;
+        return <View style={[dimensions.current]} />;
       }
       return (
-        <Pressable onPress={() => onImagePress && onImagePress(item)}>
-          <ImageSlider {...itemSize} index={idx} uri={item.thumb} />
-        </Pressable>
+        <View style={[dimensions.current]}>
+          <AutoSizedImage
+            image={item}
+            onPressIn={() => onPressIn(0)}
+            onPress={(ref, dims) => onPress(ref, dims)}
+          />
+        </View>
       );
     },
-    [itemSize, loaded]
+    [dimensions, loaded, onPress, onPressIn]
   );
 
   return (
     <View
-      className="flex-1"
+      style={{ aspectRatio }}
       onLayout={(ev) => {
-        setItemSize(ev.nativeEvent.layout);
+        dimensions.current = {
+          width: ev.nativeEvent.layout.width,
+          height: ev.nativeEvent.layout.height,
+        };
       }}
     >
       <FlatList
@@ -121,6 +169,11 @@ const MediaSlider = ({ images, initialIndex, onImagePress }: Props) => {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         removeClippedSubviews
+        getItemLayout={(_, index) => ({
+          length: dimensions.current.width,
+          offset: dimensions.current.width * index,
+          index,
+        })}
       />
       {images.length > 1 && (
         <SliderIndicator index={index} indicator={images.length} />
