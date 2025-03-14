@@ -15,9 +15,11 @@ import { Provider as ShellStateProvider } from "@/state/shell";
 import { Provider as ModerationProvider } from "@/state/prefs/moderation-opts";
 import { Provider as LabelDefsProvider } from "@/state/prefs/label-defs";
 import { Provider as PrefsStateProvider } from "@/state/prefs";
+import { Provider as LightBoxStateProvider } from "@/state/lightbox";
 import { readLastActiveAccount } from "@/state/session/util";
 import { tryFetchGates, Provider as StatsigProvider } from "@/statsig/statsig";
 import { init as initPersistedState } from "@/state/persisted";
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -27,6 +29,10 @@ import { Slot, Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomTabProvider from "@/context/bottom-tab-provider";
 import GoogleFontProvider from "@/context/google-font-provider";
+import { LogBox } from "react-native";
+import { Lightbox } from "@/components/lightbox/Lightbox";
+
+LogBox.ignoreAllLogs();
 
 function InnerApp() {
   const { currentAccount } = useSession();
@@ -59,6 +65,7 @@ function InnerApp() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomTabProvider>
             <Slot />
+            <Lightbox />
           </BottomTabProvider>
         </GestureHandlerRootView>
       </ModerationProvider>
@@ -87,7 +94,9 @@ export default function App() {
           <PrefsStateProvider>
             <ShellStateProvider>
               <StatsigProvider>
-                <InnerApp />
+                <LightBoxStateProvider>
+                  <InnerApp />
+                </LightBoxStateProvider>
               </StatsigProvider>
             </ShellStateProvider>
           </PrefsStateProvider>
