@@ -22,6 +22,10 @@ export default function DynamicLayout() {
   return (
     <Stack
       screenOptions={{
+        headerTitleStyle: {
+          fontSize: 14,
+          fontFamily: "Inter_600SemiBold",
+        },
         headerLeft: () => <BackButton />,
       }}
     />
