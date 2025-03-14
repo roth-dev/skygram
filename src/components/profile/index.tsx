@@ -9,16 +9,7 @@ import { PagerWithHeader } from "../pager/PagerWithHeader";
 import MainFeed from "../feed/main-feed";
 import { useModerationOpts } from "@/state/prefs/moderation-opts";
 import { ListRef } from "../List";
-export interface ExpoScrollForwarderViewProps {
-  scrollViewTag: number | null;
-  children: React.ReactNode;
-}
-
-export function ExpoScrollForwarderView({
-  children,
-}: React.PropsWithChildren<ExpoScrollForwarderViewProps>) {
-  return children;
-}
+import { ExpoScrollForwarderView } from "modules/expo-scroll-forwarder";
 
 export default memo(function UserProfile({
   profile,
@@ -49,23 +40,23 @@ export default memo(function UserProfile({
 
   const pageTitles = ["Post", "Video", "Media", "Liked"];
 
-  const TABS = ["Post", "Video", "Replied"];
-
   const renderHeader = ({
     setMinimumHeight,
   }: {
     setMinimumHeight: (height: number) => void;
   }) => {
     return (
-      <UserProfileHeader
-        isOwner={isOwner}
-        profile={profile}
-        // labeler={labelerInfo}
-        // descriptionRT={hasDescription ? descriptionRT : null}
-        // moderationOpts={moderationOpts}
-        // hideBackButton={hideBackButton}
-        // isPlaceholderProfile={showPlaceholder}
-      />
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
+        <UserProfileHeader
+          isOwner={isOwner}
+          profile={profile}
+          // labeler={labelerInfo}
+          // descriptionRT={hasDescription ? descriptionRT : null}
+          // moderationOpts={moderationOpts}
+          // hideBackButton={hideBackButton}
+          // isPlaceholderProfile={showPlaceholder}
+        />
+      </ExpoScrollForwarderView>
     );
   };
 
@@ -81,11 +72,11 @@ export default memo(function UserProfile({
         initialPage={selectedIndex}
         onPageSelected={onPageSelected}
         allowHeaderOverScroll
-        // onPageScrollStateChanged={onPageScrollStateChanged}
       >
         {({ scrollElRef, isFocused, headerHeight }) => {
           return (
             <MainFeed
+              key="feedPage"
               renderEmptyState={() => <></>}
               headerOffset={headerHeight}
               scrollElRef={scrollElRef as ListRef}
