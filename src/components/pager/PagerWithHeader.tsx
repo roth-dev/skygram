@@ -204,7 +204,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                 <PagerItem
                   headerHeight={headerHeight}
                   index={i}
-                  isReady={isReady}
+                  isReady={!!renderHeader ? isReady : true}
                   isFocused={i === currentPage}
                   onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
                   registerRef={registerRef}
