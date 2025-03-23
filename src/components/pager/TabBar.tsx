@@ -406,6 +406,7 @@ function TabBarItem({
         <Animated.View style={[style, styles.itemInner]}>
           <Text
             // emoji
+            font="semiBold"
             testID={testID ? `${testID}-${item}` : undefined}
             onLayout={handleTextLayout}
           >
