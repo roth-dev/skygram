@@ -7,7 +7,11 @@ import {
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { useSession } from "@/state/session";
 import { List } from "@/components/List";
-import { FeedPostSliceItem, usePostFeedQuery } from "@/state/queries/post-feed";
+import {
+  AuthorFilter,
+  FeedPostSliceItem,
+  usePostFeedQuery,
+} from "@/state/queries/post-feed";
 import { AppBskyEmbedVideo } from "@atproto/api";
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from "@/constants";
 import { useBreakpoints } from "@/hooks/breakpoints";
@@ -19,6 +23,8 @@ import { View } from "@/components/ui";
 import PostFeedItem from "@/components/feed/post-feed-item";
 import { FeedRow } from "./type";
 import { useInitialNumToRender } from "@/hooks/useInitialNumToRender";
+import VideoPostFeed from "./video-post-feed";
+import { VideoFeedSourceContext } from "../video/type";
 
 export default memo(function MainFeed(props: MainFeedProps) {
   const {
@@ -50,6 +56,8 @@ export default memo(function MainFeed(props: MainFeedProps) {
   const { hasSession } = useSession();
 
   const [feedType, feedUriOrActorDid, feedTab] = feed.split("|");
+
+  const feedCacheKey = feedParams?.feedCacheKey;
 
   const opts = useMemo(
     () => ({ enabled, ignoreFilterFor }),
@@ -146,7 +154,7 @@ export default memo(function MainFeed(props: MainFeedProps) {
           for (let i = 0; i < videos.length; i++) {
             const video = videos[i];
             const item = video.item;
-            const cols = gtMobile ? 3 : 2;
+            const cols = 3;
             const rowItem = { item, feedContext: video.feedContext };
             if (i % cols === 0) {
               rows.push([rowItem]);
@@ -359,8 +367,24 @@ export default memo(function MainFeed(props: MainFeedProps) {
         const item = slice.items[indexInSlice];
         return <PostFeedItem item={item} />;
       }
-      // else if(row.type === "")
-      return <></>;
+      if (row.type === "videoGridRow") {
+        let sourceContext: VideoFeedSourceContext;
+        if (feedType === "author") {
+          sourceContext = {
+            type: "author",
+            did: feedUriOrActorDid,
+            filter: feedTab as AuthorFilter,
+          };
+        } else {
+          sourceContext = {
+            type: "feedgen",
+            uri: row.sourceFeedUri,
+            sourceInterstitial: feedCacheKey ?? "none",
+          };
+        }
+        return <VideoPostFeed items={row.items} context={sourceContext} />;
+      }
+      return null;
     },
     []
   );
@@ -372,7 +396,6 @@ export default memo(function MainFeed(props: MainFeedProps) {
       </View>
     );
   }
-
   return (
     <View testID={testID} className="flex-1">
       <List
