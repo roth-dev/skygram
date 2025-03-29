@@ -1,24 +1,20 @@
 import Layout from "@/components/Layout";
 import { List } from "@/components/List";
-import { Text, View } from "@/components/ui";
+import { View } from "@/components/ui";
 import VideoItem, {
   createThreeVideoPlayers,
 } from "@/components/video/video-item";
 import { useNonReactiveCallback } from "@/hooks/useNonReactiveCallback";
-import {
-  AuthorFilter,
-  FeedPostSliceItem,
-  usePostFeedQuery,
-} from "@/state/queries/post-feed";
+import { FeedPostSliceItem, usePostFeedQuery } from "@/state/queries/post-feed";
 import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
   ModerationDecision,
 } from "@atproto/api";
 import { useIsFocused } from "@react-navigation/native";
-import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { VideoPlayer } from "expo-video";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   ListRenderItem,
@@ -58,10 +54,10 @@ export default function VideoFeedScreen() {
       case "author":
         return `author|${params.did as string}|${params.filter}` as const;
       default:
-      case "feedgen":
         return defaultFeedDesc;
     }
   }, [params]);
+
   const {
     data,
     error,
