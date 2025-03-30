@@ -8,14 +8,18 @@ import { sanitizeDisplayName } from "@/lib/strings/display-names";
 
 export default function () {
   const params = useLocalSearchParams<{ did: string }>();
-  const { data, isFetching } = useProfileQuery({ did: params.did });
+  const { data, isFetching, isPlaceholderData } = useProfileQuery({
+    did: params.did,
+  });
 
   let content;
 
   if (!data || isFetching) {
     content = <ActivityIndicator />;
   } else {
-    content = <UserProfile profile={data} />;
+    content = (
+      <UserProfile shouldHeaderReady={!isPlaceholderData} profile={data} />
+    );
   }
 
   return (
