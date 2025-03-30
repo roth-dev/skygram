@@ -67,12 +67,9 @@ export default function VideoFeedScreen() {
     fetchNextPage,
   } = usePostFeedQuery(
     feedDesc,
-    {
-      feedCacheKey: "explore",
-    }
-    // params.type === "feedgen" && params.sourceInterstitial !== "none"
-    //   ? { feedCacheKey: params.sourceInterstitial }
-    //   : undefined
+    params.type === "feedgen" && params.sourceInterstitial !== "none"
+      ? { feedCacheKey: params.sourceInterstitial }
+      : undefined
   );
 
   const videos = useMemo(() => {
