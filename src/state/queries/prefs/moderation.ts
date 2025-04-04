@@ -26,7 +26,7 @@ export function useMyLabelersQuery({
   let dids = Array.from(
     new Set(
       AtpAgent.appLabelers.concat(
-        prefs.data?.moderationPrefs.labelers.map((l) => l.did) || []
+        prefs.data?.moderationPrefs?.labelers?.map((l) => l.did) || []
       )
     )
   );
@@ -40,7 +40,7 @@ export function useMyLabelersQuery({
     return {
       isLoading,
       error,
-      data: labelers.data,
+      data: labelers.data || [], // Ensure we always return an array
     };
   }, [labelers, isLoading, error]);
 }
@@ -49,14 +49,17 @@ export function useLabelDefinitionsQuery() {
   const labelers = useMyLabelersQuery();
 
   return React.useMemo(() => {
+    // Ensure labelers.data is an array, if undefined use empty array
+    const labelersData = Array.isArray(labelers.data) ? labelers.data : [];
+
     return {
       labelDefs: Object.fromEntries(
-        (labelers.data || []).map((labeler) => [
+        labelersData.map((labeler) => [
           labeler.creator.did,
           interpretLabelValueDefinitions(labeler),
         ])
       ),
-      labelers: labelers.data || [],
+      labelers: labelersData,
     };
   }, [labelers]);
 }

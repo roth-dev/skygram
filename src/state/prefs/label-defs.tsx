@@ -11,15 +11,25 @@ interface StateContext {
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[];
 }
 
-const stateContext = React.createContext<StateContext>({
+const initialState: StateContext = {
   labelDefs: {},
   labelers: [],
-});
+};
+
+const stateContext = React.createContext<StateContext>(initialState);
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
   const state = useLabelDefinitionsQuery();
+  const value = React.useMemo(
+    () => ({
+      labelDefs: state.labelDefs || {},
+      labelers: state.labelers || [],
+    }),
+    [state]
+  );
+
   return (
-    <stateContext.Provider value={state}>{children}</stateContext.Provider>
+    <stateContext.Provider value={value}>{children}</stateContext.Provider>
   );
 }
 
