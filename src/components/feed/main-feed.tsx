@@ -26,7 +26,7 @@ import { useInitialNumToRender } from "@/hooks/useInitialNumToRender";
 import VideoPostFeed from "./video-post-feed";
 import { VideoFeedSourceContext } from "../video/type";
 
-export default memo(function MainFeed(props: MainFeedProps) {
+export default memo(function Impl(props: MainFeedProps) {
   const {
     feed,
     feedParams,
@@ -406,6 +406,7 @@ export default memo(function MainFeed(props: MainFeedProps) {
         onRefresh={onRefresh}
         renderItem={renderItem}
         onEndReachedThreshold={2}
+        ref={scrollElRef}
         onEndReached={onEndReached}
         headerOffset={headerOffset}
         updateCellsBatchingPeriod={40}
