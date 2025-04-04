@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.rothdev.butterfly'
+    namespace 'com.rothdev.skygram'
     defaultConfig {
-        applicationId 'com.rothdev.butterfly'
+        applicationId 'com.rothdev.skygram'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

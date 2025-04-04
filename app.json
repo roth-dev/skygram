@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Butterfly",
-    "slug": "butterfly",
+    "name": "SkyGram",
+    "slug": "skygram",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.roth-dev.butterfly",
+      "bundleIdentifier": "com.skygram",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera"
       }
@@ -21,10 +21,9 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.CAMERA",
         "android.permission.CAMERA"
       ],
-      "package": "com.rothdev.butterfly"
+      "package": "com.skygram"
     },
     "web": {
      "output": "static",
