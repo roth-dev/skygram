@@ -3,23 +3,181 @@ import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
   ModerationDecision,
+  RichTextProps,
 } from "@atproto/api";
 import { useEventListener } from "expo";
 import { createVideoPlayer, VideoPlayer, VideoView } from "expo-video";
-import { memo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import {
-  Gesture,
-  GestureDetector,
-  NativeGesture,
-} from "react-native-gesture-handler";
-import { Platform } from "react-native";
-import { Text, View } from "../ui";
+import { NativeGesture } from "react-native-gesture-handler";
+import { Platform, Pressable, StyleSheet } from "react-native";
+import { HStack, Text, View, VStack } from "../ui";
 import { Image, ImageStyle } from "expo-image";
+import { formatNumberToKOrM } from "@/lib/numbers";
+import { Ionicons } from "@expo/vector-icons";
+import UserAvatar from "../UserAvatar";
+import { useRouter } from "expo-router";
+import { Button } from "../ui/button";
+import { RichText as RichTextAPI } from "@atproto/api";
+import { RichText } from "../ui/rich-text";
+import { cn } from "@/lib/utils";
+import { sanitizeDisplayName } from "@/lib/strings/display-names";
 const VIDEO_PLAYER_BOTTOM_INSET = 57;
+
+function Overlay({
+  post,
+  isOwner,
+  isActive,
+}: {
+  isActive: boolean;
+  isOwner: boolean;
+  post: AppBskyFeedDefs.PostView;
+}) {
+  const [showMore, setShowMore] = useState(false);
+  const isLiked = post.viewer?.like;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (showMore && !isActive) {
+      setShowMore(false);
+    }
+  }, [showMore, isActive]);
+
+  const onPress = useCallback(() => {
+    if (isOwner) {
+      router.back();
+    } else {
+      router.push(`/user-profile/${post.author.did}`);
+    }
+  }, [isOwner, router, post]);
+
+  const richText = useMemo(() => {
+    if ("text" in post.record || "facets" in post.record) {
+      return new RichTextAPI({
+        text: "text" in post.record ? (post.record.text as string) : "",
+        facets:
+          "facets" in post.record
+            ? (post.record.facets as RichTextProps["facets"])
+            : [],
+      });
+    }
+  }, [post]);
+
+  const onShowMore = useCallback(() => {
+    if (!richText) return;
+    setShowMore(!showMore);
+  }, [showMore, richText]);
+
+  const shouldFollow = useMemo(() => {
+    return !post.author.viewer?.following;
+  }, [post]);
+
+  return (
+    <View
+      className="items-end pb-[25%] flex flex-row justify-between px-4 bg-transparent"
+      style={StyleSheet.absoluteFillObject}
+    >
+      {
+        // left user profile
+      }
+      <Pressable
+        onPress={onPress}
+        className="max-w-[85%] relative flex flex-col gap-1"
+      >
+        <HStack className="bg-transparent">
+          <UserAvatar avatar={post.author.avatar} />
+          <VStack
+            className={cn("bg-transparent ", !shouldFollow ? "flex-1" : "")}
+          >
+            <HStack className="bg-transparent">
+              <Text
+                font="semiBold"
+                numberOfLines={1}
+                className="text-white shadow shadow-black max-w-[72%]"
+              >
+                {sanitizeDisplayName(
+                  post.author?.displayName ?? `@${post.author?.handle}`
+                )}
+              </Text>
+
+              {shouldFollow && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="bg-transparent h-7"
+                >
+                  <Button.Text
+                    font="semiBold"
+                    className="text-white shadow shadow-black"
+                    size="sm"
+                  >
+                    Follow
+                  </Button.Text>
+                </Button>
+              )}
+            </HStack>
+          </VStack>
+        </HStack>
+        {richText && (
+          <Pressable onPress={onShowMore}>
+            <RichText
+              numberOfLines={showMore ? 15 : 2}
+              value={richText}
+              className="text-white shadow shadow-black"
+              linkClassName="text-white text-primary"
+              mentionClassName="text-white"
+            />
+          </Pressable>
+        )}
+      </Pressable>
+
+      {
+        // right action buttons
+      }
+      <VStack className="bg-transparent gap-4">
+        <Pressable className="items-center">
+          <Ionicons
+            className="shadow-black shadow"
+            name="heart"
+            size={30}
+            color={isLiked ? "red" : "white"}
+          />
+          <Text font="semiBold" className="text-white shadow shadow-black">
+            {formatNumberToKOrM(post.likeCount ?? 0)}
+          </Text>
+        </Pressable>
+        <Pressable className="items-center">
+          <Ionicons
+            name="chatbox"
+            size={30}
+            color="white"
+            className="shadow-black shadow"
+          />
+          <Text font="semiBold" className="text-white shadow shadow-black">
+            {formatNumberToKOrM(post.quoteCount ?? 0)}
+          </Text>
+        </Pressable>
+        <Pressable className="items-center">
+          <Ionicons name="repeat" size={30} color="white" />
+          <Text font="semiBold" className="text-white shadow shadow-black">
+            {formatNumberToKOrM(post.repostCount ?? 0)}
+          </Text>
+        </Pressable>
+        <Pressable className="items-center">
+          <Ionicons
+            name="ellipsis-horizontal"
+            size={30}
+            color="white"
+            className="text-white shadow shadow-black"
+          />
+        </Pressable>
+      </VStack>
+    </View>
+  );
+}
 
 export function createThreeVideoPlayers(
   sources?: [string, string, string]
@@ -126,6 +284,7 @@ function VideoItemInner({
 
 interface VideoItemProps {
   player?: VideoPlayer;
+  isOwner?: boolean;
   post: AppBskyFeedDefs.PostView;
   embed: AppBskyEmbedVideo.View;
   active: boolean;
@@ -142,6 +301,7 @@ function VideoItem(props: VideoItemProps) {
     embed,
     active,
     adjacent,
+    isOwner,
     scrollGesture,
     moderation,
     feedContext,
@@ -177,6 +337,8 @@ function VideoItem(props: VideoItemProps) {
       {shouldRenderVideo && player && (
         <VideoItemInner player={player} embed={embed} />
       )}
+
+      <Overlay isActive={active} isOwner={isOwner ?? false} post={post} />
     </View>
   );
 }
