@@ -25,6 +25,7 @@ import { FeedRow } from "./type";
 import { useInitialNumToRender } from "@/hooks/useInitialNumToRender";
 import VideoPostFeed from "./video-post-feed";
 import { VideoFeedSourceContext } from "../video/type";
+import VideoTrendingGrid from "./video-trending-grid";
 
 export default memo(function Impl(props: MainFeedProps) {
   const {
@@ -383,6 +384,9 @@ export default memo(function Impl(props: MainFeedProps) {
           };
         }
         return <VideoPostFeed items={row.items} context={sourceContext} />;
+      }
+      if (row.type === "interstitialTrendingVideos") {
+        return <VideoTrendingGrid />;
       }
       return null;
     },

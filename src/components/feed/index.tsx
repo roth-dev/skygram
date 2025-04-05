@@ -1,31 +1,14 @@
-import {
-  ActivityIndicator,
-  Dimensions,
-  ListRenderItemInfo,
-} from "react-native";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "@/state/session";
-import { List, ListMethods } from "@/components/List";
-import {
-  FeedPostSliceItem,
-  RQKEY as FEED_RQKEY,
-  usePostFeedQuery,
-} from "@/state/queries/post-feed";
-import { AppBskyEmbedVideo, AppBskyFeedDefs } from "@atproto/api";
-import {
-  DISCOVER_FEED_URI,
-  KNOWN_SHUTDOWN_FEEDS,
-  VIDEO_FEED_URIS,
-} from "@/constants";
-import { useBreakpoints } from "@/hooks/breakpoints";
+import { ListMethods } from "@/components/List";
+import { RQKEY as FEED_RQKEY } from "@/state/queries/post-feed";
+import { AppBskyFeedDefs } from "@atproto/api";
+import { VIDEO_FEED_URIS } from "@/constants";
 import { isNative } from "@/platform/detection";
-import { useWebMediaQueries } from "@/hooks/useWebMediaQueries";
-import { useTrendingSettings } from "@/state/prefs/trending";
 import { logEvent } from "@/statsig/statsig";
-import { Text, View } from "@/components/ui";
-import PostFeedItem from "@/components/feed/post-feed-item";
+import { View } from "@/components/ui";
 import { MainScrollProvider } from "@/context/main-scroll-provider";
-import { FeedProps, FeedRow } from "./type";
+import { FeedProps } from "./type";
 import MainFeed from "./main-feed";
 import { useHeaderOffset } from "@/hooks/useHeaderOffset";
 import { useSetMinimalShellMode } from "@/state/shell/minimal-mode";
@@ -75,12 +58,9 @@ export default function Feed({
   }, [headerOffset, setMinimalShellMode]);
 
   const onSoftReset = useCallback(() => {
-    // const isScreenFocused =
-    // getTabState(getRootNavigation(navigation).getState(), 'Home') ===
-    // TabState.InsideAtRoot
     if (navigation.isFocused() && isPageFocused) {
       scrollToTop();
-      truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+      // truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
       setHasNew(false);
       logEvent("feed:refresh", {
         feedType: feed.split("|")[0],
