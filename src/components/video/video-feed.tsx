@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout";
 import { List } from "@/components/List";
-import { View } from "@/components/ui";
 import VideoItem, {
   createThreeVideoPlayers,
 } from "@/components/video/video-item";
@@ -15,14 +14,10 @@ import { useIsFocused } from "@react-navigation/native";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { VideoPlayer } from "expo-video";
 import { useCallback, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  ListRenderItem,
-  ViewabilityConfig,
-  ViewToken,
-} from "react-native";
+import { ListRenderItem, ViewabilityConfig, ViewToken } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { VideoFeedSourceContext, VideoItem as VideoItemType } from "./type";
+import { VIDEO_FEED_URI } from "@/constants";
 
 type CurrentSource = {
   source: string;
@@ -45,8 +40,6 @@ export default function VideoFeedScreen() {
   const scrollGesture = useMemo(() => Gesture.Native(), []);
   const isFocused = useIsFocused();
 
-  const defaultFeedDesc =
-    "feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids";
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case "feedgen":
@@ -54,9 +47,9 @@ export default function VideoFeedScreen() {
       case "author":
         return `author|${params.did as string}|${params.filter}` as const;
       default:
-        return defaultFeedDesc;
+        return `feedgen|${VIDEO_FEED_URI}`;
     }
-  }, [params]);
+  }, []);
 
   const {
     data,
@@ -238,10 +231,13 @@ export default function VideoFeedScreen() {
       const { post, video } = item;
       const player = players?.[index % 3];
       const currentSource = currentSources[index % 3];
+      const isOwner =
+        params.type === "author" && post.author.did === params.did;
 
       return (
         <VideoItem
           player={player}
+          isOwner={isOwner}
           post={post}
           embed={video}
           active={
@@ -278,14 +274,8 @@ export default function VideoFeedScreen() {
   function keyExtractor(item: FeedPostSliceItem) {
     return item._reactKey;
   }
-  let screen = (
-    <View className="flex-1 justify-center items-center">
-      <ActivityIndicator />
-    </View>
-  );
-
-  if (!isFetching) {
-    screen = (
+  return (
+    <Layout.Tab>
       <GestureDetector gesture={scrollGesture}>
         <List
           data={videos}
@@ -294,6 +284,7 @@ export default function VideoFeedScreen() {
           initialNumToRender={3}
           maxToRenderPerBatch={3}
           windowSize={6}
+          className="bg-black"
           pagingEnabled={true}
           // ListFooterComponent={
           //   <ListFooter
@@ -317,8 +308,6 @@ export default function VideoFeedScreen() {
           viewabilityConfig={viewabilityConfig}
         />
       </GestureDetector>
-    );
-  }
-
-  return <Layout.Tab>{screen}</Layout.Tab>;
+    </Layout.Tab>
+  );
 }
