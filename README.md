@@ -44,7 +44,7 @@ A modern social media application built with React Native and Expo, integrating 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/skygram.git
+git clone https://github.com/roth-dev/skygram.git
 cd skygram
 ```
 
