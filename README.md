@@ -244,8 +244,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/skygram/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/skygram/discussions)
+- **Issues**: [GitHub Issues](https://github.com/roth-dev/skygram/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/roth-dev/skygram/discussions)
 - **Email**: support@skygram.app
 
 ## 🙏 Acknowledgments
