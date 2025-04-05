@@ -1,22 +1,18 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { BlurView } from "expo-blur";
 import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import Animated, {
   useAnimatedStyle,
   withTiming,
   useSharedValue,
   useAnimatedReaction,
 } from "react-native-reanimated";
-import { useIsFocused } from "@react-navigation/native";
-import { useSegments } from "expo-router";
 import { useMemo } from "react";
+import { useSegments } from "expo-router";
 
-export default function BlurTabBarBackground() {
+export default function TabBarBackground() {
   const isFocused = useIsFocused();
-  const segments = useSegments();
   const opacity = useSharedValue(1);
-
+  const segments = useSegments();
   const isVideoFeed = useMemo(() => {
     return (
       segments.indexOf("video-feed") !== -1 ||
@@ -40,7 +36,7 @@ export default function BlurTabBarBackground() {
     [isFocused, isVideoFeed]
   );
 
-  const blurViewStyle = useAnimatedStyle(() => ({
+  const whiteBgStyle = useAnimatedStyle(() => ({
     opacity: 1 - opacity.value,
   }));
 
@@ -57,19 +53,17 @@ export default function BlurTabBarBackground() {
           blackBgStyle,
         ]}
       />
-      <Animated.View style={[StyleSheet.absoluteFill, blurViewStyle]}>
-        <BlurView
-          tint="systemChromeMaterial"
-          intensity={100}
-          style={StyleSheet.absoluteFill}
-        />
-      </Animated.View>
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: "#ffffff" },
+          whiteBgStyle,
+        ]}
+      />
     </View>
   );
 }
 
 export function useBottomTabOverflow() {
-  const tabHeight = useBottomTabBarHeight();
-  const { bottom } = useSafeAreaInsets();
-  return bottom + tabHeight;
+  return 0;
 }
