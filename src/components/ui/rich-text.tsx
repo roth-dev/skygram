@@ -3,6 +3,7 @@ import { Linking, TextStyle } from "react-native";
 import { AppBskyRichtextFacet, RichText as RichTextAPI } from "@atproto/api";
 import { Text, TextProps } from "./text";
 import { router } from "expo-router";
+import { cn } from "@/lib/utils";
 
 export interface RichTextProps extends TextProps {
   value: string | RichTextAPI;
@@ -12,6 +13,9 @@ export interface RichTextProps extends TextProps {
   interactiveStyle?: TextStyle;
   emojiMultiplier?: number;
   numberOfLines?: number;
+  linkClassName?: string;
+  mentionClassName?: string;
+  hashtagClassName?: string;
 }
 
 export function RichText({
@@ -22,6 +26,9 @@ export function RichText({
   interactiveStyle,
   emojiMultiplier = 1.85,
   numberOfLines,
+  linkClassName,
+  mentionClassName,
+  hashtagClassName,
   ...props
 }: RichTextProps) {
   const richText = useMemo(
@@ -60,9 +67,9 @@ export function RichText({
           key={key}
           style={[interactiveStyle]}
           font="semiBold"
-          className="text-blue-500 underline"
           suppressHighlighting
           {...props}
+          className={cn("text-blue-500 underline", mentionClassName)}
           onPress={() => {
             router.push(`/user-profile/${mention.did}`);
           }}
@@ -77,8 +84,8 @@ export function RichText({
           numberOfLines={1}
           style={interactiveStyle}
           suppressHighlighting
-          className="text-blue-500 underline"
           {...props}
+          className={cn("text-blue-500 underline", linkClassName)}
           onPress={() =>
             onLinkPress ? onLinkPress(link.uri) : Linking.openURL(link.uri)
           }
@@ -97,8 +104,8 @@ export function RichText({
           key={key}
           style={interactiveStyle}
           suppressHighlighting
-          className="text-purple-500 underline"
           {...props}
+          className={cn("text-purple-500 underline", hashtagClassName)}
           onPress={() => {
             // router.push({
             //   pathname: "/(app)/",
