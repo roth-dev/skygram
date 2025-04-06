@@ -49,7 +49,7 @@ export default function VideoFeedScreen() {
       default:
         return `feedgen|${VIDEO_FEED_URI}`;
     }
-  }, []);
+  }, [params]);
 
   const {
     data,
