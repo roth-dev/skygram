@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   useSharedValue,
   useAnimatedReaction,
+  interpolateColor,
 } from "react-native-reanimated";
 import { useIsFocused } from "@react-navigation/native";
 import { useSegments } from "expo-router";
@@ -15,11 +16,12 @@ import { useMemo } from "react";
 export default function BlurTabBarBackground() {
   const isFocused = useIsFocused();
   const segments = useSegments();
-  const opacity = useSharedValue(1);
+  const opacity = useSharedValue(0);
 
   const isVideoFeed = useMemo(() => {
     return (
       segments.indexOf("video-feed") !== -1 ||
+      segments.indexOf("(video-feed)") !== -1 ||
       segments.indexOf("video-player") !== -1
     );
   }, [segments]);
@@ -46,21 +48,20 @@ export default function BlurTabBarBackground() {
 
   const blackBgStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
+    backgroundColor: interpolateColor(
+      opacity.value,
+      [0, 1],
+      ["transparent", "#000000"]
+    ),
   }));
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: "black" },
-          blackBgStyle,
-        ]}
-      />
+      <Animated.View style={[StyleSheet.absoluteFill, blackBgStyle]} />
       <Animated.View style={[StyleSheet.absoluteFill, blurViewStyle]}>
         <BlurView
           tint="systemChromeMaterial"
-          intensity={100}
+          intensity={80}
           style={StyleSheet.absoluteFill}
         />
       </Animated.View>
