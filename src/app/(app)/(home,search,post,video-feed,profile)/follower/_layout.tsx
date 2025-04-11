@@ -1,9 +1,7 @@
 import Layout from "@/components/Layout";
-import { ListRef } from "@/components/List";
-import { PagerRef } from "@/components/pager/Pager";
+import { Pager, PagerRef } from "@/components/pager/Pager";
 import { PagerWithHeader } from "@/components/pager/PagerWithHeader";
 import ProfileFollower from "@/components/profile/profile-follower";
-import { Text, View } from "@/components/ui";
 import { formatNumberToKOrM } from "@/lib/numbers";
 import { sanitizeDisplayName } from "@/lib/strings/display-names";
 import { useProfileQuery } from "@/state/queries/profile";
@@ -22,6 +20,8 @@ export default function FollowerScreen() {
     [route]
   );
 
+  const [selectedIndex, setSelectedIndex] = useState(() => initialPage);
+
   const { data: resolvedDid } = useResolveDidQuery(route.handle);
   const { data: profile } = useProfileQuery({
     did: resolvedDid,
@@ -29,7 +29,7 @@ export default function FollowerScreen() {
 
   const pagerRef = useRef<PagerRef>(null);
   const onPageSelected = useCallback((index: number) => {
-    pagerRef.current?.setPage(index);
+    setSelectedIndex(index);
   }, []);
 
   const pageTitles = useMemo(() => {
@@ -40,42 +40,18 @@ export default function FollowerScreen() {
   }, [profile]);
 
   return (
-    <Layout.Screen title={sanitizeDisplayName(route.handle)}>
-      <View className="flex-1">
-        <PagerWithHeader
-          ref={pagerRef}
-          key={"followerPager"}
-          testID="followerScreen"
-          items={pageTitles}
-          isHeaderReady
-          renderHeader={() => (
-            <View>
-              <Text>Hello</Text>
-            </View>
-          )}
-          initialPage={initialPage}
-          onPageSelected={onPageSelected}
-        >
-          {({ scrollElRef, isFocused, headerHeight }) => {
-            return (
-              <ProfileFollower
-                key="followerTab"
-                scrollElRef={scrollElRef as ListRef}
-                did={route.did}
-              />
-            );
-          }}
-          {({ scrollElRef, isFocused, headerHeight }) => {
-            return (
-              <ProfileFollower
-                key="followeringTab"
-                scrollElRef={scrollElRef as ListRef}
-                did={route.did}
-              />
-            );
-          }}
-        </PagerWithHeader>
-      </View>
+    <Layout.Screen title={sanitizeDisplayName(profile?.handle ?? "")}>
+      <PagerWithHeader
+        ref={pagerRef}
+        testID="followerScreen"
+        items={pageTitles}
+        isHeaderReady
+        initialPage={initialPage}
+        onPageSelected={onPageSelected}
+      >
+        {() => <ProfileFollower key="followerTab" did={route.did} />}
+        {() => <ProfileFollower key="followeringTab" did={route.did} />}
+      </PagerWithHeader>
     </Layout.Screen>
   );
 }
