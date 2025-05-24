@@ -27,7 +27,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.rothdev.butterfly"/>
+        <data android:scheme="com.skygram"/>
       </intent-filter>
     </activity>
   </application>
