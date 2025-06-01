@@ -17,7 +17,7 @@ import { sanitizeDisplayName } from "@/lib/strings/display-names";
 import { Button } from "@/components/ui/button";
 import Spacer from "@/components/ui/spacer";
 
-export default function Search() {
+export default function SearchScreen() {
   const agent = useAgent();
   const [results, setResults] = useState<AppBskyActorDefs.ProfileView[]>([]);
   const [isLoading, setIsLoading] = useState(false);

@@ -8,9 +8,8 @@ import { usePinnedFeedsInfos } from "@/state/queries/feed";
 import { FeedParams } from "@/state/queries/post-feed";
 import { usePreferencesQuery } from "@/state/queries/prefs";
 import { useSetMinimalShellMode } from "@/state/shell/minimal-mode";
-import { Stack } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, SafeAreaView } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 export default function HomeScreen() {
   const { data: preferences } = usePreferencesQuery();
