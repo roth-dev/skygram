@@ -16,21 +16,18 @@ import { Provider as ModerationProvider } from "@/state/prefs/moderation-opts";
 import { Provider as LabelDefsProvider } from "@/state/prefs/label-defs";
 import { Provider as PrefsStateProvider } from "@/state/prefs";
 import { Provider as LightBoxStateProvider } from "@/state/lightbox";
+import { Provider as PortalProvider } from "@/components/Portal";
 import { readLastActiveAccount } from "@/state/session/util";
 import { tryFetchGates, Provider as StatsigProvider } from "@/statsig/statsig";
 import { init as initPersistedState } from "@/state/persisted";
 
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomTabProvider from "@/context/bottom-tab-provider";
 import GoogleFontProvider from "@/context/google-font-provider";
 import { LogBox } from "react-native";
 import { Lightbox } from "@/components/lightbox/Lightbox";
+import ThemeProvider from "@/context/theme-provider";
 
 LogBox.ignoreAllLogs();
 
@@ -60,23 +57,21 @@ function InnerApp() {
 
   return (
     <QueryProvider currentDid={currentAccount?.did}>
-      {/* <LabelDefsProvider> */}
-      <ModerationProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomTabProvider>
-            <Slot />
-            <Lightbox />
-          </BottomTabProvider>
-        </GestureHandlerRootView>
-      </ModerationProvider>
-      {/* </LabelDefsProvider> */}
+      <LabelDefsProvider>
+        <ModerationProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomTabProvider>
+              <Slot />
+              <Lightbox />
+            </BottomTabProvider>
+          </GestureHandlerRootView>
+        </ModerationProvider>
+      </LabelDefsProvider>
     </QueryProvider>
   );
 }
 
-export default function App() {
-  const colorScheme = useColorScheme();
-
+export default function RootLayout() {
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
@@ -88,14 +83,16 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider>
       <GoogleFontProvider>
         <SessionProvider>
           <PrefsStateProvider>
             <ShellStateProvider>
               <StatsigProvider>
                 <LightBoxStateProvider>
-                  <InnerApp />
+                  <PortalProvider>
+                    <InnerApp />
+                  </PortalProvider>
                 </LightBoxStateProvider>
               </StatsigProvider>
             </ShellStateProvider>
