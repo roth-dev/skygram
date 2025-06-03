@@ -24,4 +24,13 @@ const HStack = React.forwardRef<
 
 HStack.displayName = "HStack";
 
-export { VStack, HStack };
+const ZStack = React.forwardRef<
+  React.ElementRef<typeof View>,
+  React.ComponentPropsWithoutRef<typeof View>
+>(({ className, ...props }, ref) => (
+  <View ref={ref} {...props} className={cn("absolute z-50", className)} />
+));
+
+ZStack.displayName = "ZStack";
+
+export { VStack, HStack, ZStack };
