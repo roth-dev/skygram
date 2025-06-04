@@ -17,7 +17,6 @@ import { Platform, Pressable, StyleSheet } from "react-native";
 import { HStack, Text, View, VStack } from "../ui";
 import { Image, ImageStyle } from "expo-image";
 import { formatNumberToKOrM } from "@/lib/numbers";
-import { Ionicons } from "@expo/vector-icons";
 import UserAvatar from "../UserAvatar";
 import { useRouter } from "expo-router";
 import { Button } from "../ui/button";
@@ -25,6 +24,7 @@ import { RichText as RichTextAPI } from "@atproto/api";
 import { RichText } from "../ui/rich-text";
 import { cn } from "@/lib/utils";
 import { sanitizeDisplayName } from "@/lib/strings/display-names";
+import ExpoIcon from "../ui/icon";
 const VIDEO_PLAYER_BOTTOM_INSET = 57;
 
 function Overlay({
@@ -139,10 +139,10 @@ function Overlay({
       }
       <VStack className="bg-transparent gap-4">
         <Pressable className="items-center">
-          <Ionicons
+          <ExpoIcon
             className="shadow-black shadow"
             name="heart"
-            size={30}
+            size="3xl"
             color={isLiked ? "red" : "white"}
           />
           <Text font="semiBold" className="text-white shadow shadow-black">
@@ -150,9 +150,9 @@ function Overlay({
           </Text>
         </Pressable>
         <Pressable className="items-center">
-          <Ionicons
+          <ExpoIcon
             name="chatbox"
-            size={30}
+            size="3xl"
             color="white"
             className="shadow-black shadow"
           />
@@ -161,15 +161,15 @@ function Overlay({
           </Text>
         </Pressable>
         <Pressable className="items-center">
-          <Ionicons name="repeat" size={30} color="white" />
+          <ExpoIcon name="repeat" size="3xl" color="white" />
           <Text font="semiBold" className="text-white shadow shadow-black">
             {formatNumberToKOrM(post.repostCount ?? 0)}
           </Text>
         </Pressable>
         <Pressable className="items-center">
-          <Ionicons
+          <ExpoIcon
             name="ellipsis-horizontal"
-            size={30}
+            size="3xl"
             color="white"
             className="text-white shadow shadow-black"
           />
