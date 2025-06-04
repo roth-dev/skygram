@@ -60,7 +60,7 @@ export default function FeedLinkEmbed({ embed }: FeedLinkEmbedProps) {
 
   return (
     <Pressable onPress={handlePress}>
-      <View className="mt-2 mx-4 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+      <View className="mt-2 mx-4 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-neutral-800">
         {embed.external.thumb && (
           <View
             ref={imageRef}
