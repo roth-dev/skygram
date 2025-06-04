@@ -1,6 +1,6 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useThem } from "@/context/theme-provider";
+import { useTheme } from "@/context/theme-provider";
 
 const IconSize = {
   xs: 12,
@@ -24,7 +24,7 @@ const ExpoIcon = React.forwardRef<
   React.ComponentRef<typeof Ionicons>,
   ExpoIconProps
 >(({ size = "base", ...props }, ref) => {
-  const { currentScheme } = useThem();
+  const { currentScheme } = useTheme();
   return (
     <Ionicons
       ref={ref}
