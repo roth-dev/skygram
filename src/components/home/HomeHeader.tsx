@@ -7,8 +7,8 @@ import * as DropdownMenu from "zeego/dropdown-menu";
 import { Button } from "../ui/button";
 import { HStack, View } from "../ui";
 import Logo from "../Logo";
-import { Ionicons } from "@expo/vector-icons";
 import Spacer from "../ui/spacer";
+import ExpoIcon from "../ui/icon";
 
 function HeaderDropdown({
   pinnedNames,
@@ -34,7 +34,7 @@ function HeaderDropdown({
           <Button.Text size="2xl" font="semiBold">
             {selected}
           </Button.Text>
-          <Button.Icon name="chevron.down" size={14} />
+          <Button.Icon name="chevron-down" />
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
@@ -121,12 +121,12 @@ export function HomeHeader(
         </View>
         <Spacer />
         <View className="w-[120px] items-end">
-          <HStack className="right-4">
-            <Button variant="ghost" size="icon">
-              <Ionicons name="chatbubble-ellipses-outline" size={22} />
+          <HStack className="right-3">
+            <Button variant="secondary" shape="rounded" size="icon">
+              <ExpoIcon name="chatbubble-ellipses-outline" size="lg" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <Ionicons name="notifications-outline" size={22} />
+            <Button variant="secondary" shape="rounded" size="icon">
+              <ExpoIcon name="notifications-outline" size="lg" />
             </Button>
           </HStack>
         </View>

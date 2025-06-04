@@ -4,12 +4,11 @@ import { Pressable, StyleProp, ViewStyle } from "react-native";
 import { Image } from "expo-image";
 import { memo, useCallback, useMemo } from "react";
 import { formatNumberToKOrM } from "@/lib/numbers";
-import { Colors } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
 import Animated from "react-native-reanimated";
 import { Link, LinkProps } from "expo-router";
 import { VideoFeedSourceContext } from "../video/type";
 import { cn } from "@/lib/utils";
+import ExpoIcon from "../ui/icon";
 
 interface Props {
   items: FeedPostSliceItem[];
@@ -82,12 +81,7 @@ export const VideoGridItem = memo(function Impl({
 
       <View className="absolute bottom-2 left-2 bg-transparent">
         <HStack className="bg-transparent gap-1">
-          <Ionicons
-            size={16}
-            name="heart"
-            className="shadow-black shadow"
-            color={Colors.light.background}
-          />
+          <ExpoIcon name="heart" className="shadow-black shadow" />
           <Text
             font="semiBold"
             size="sm"

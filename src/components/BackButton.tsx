@@ -1,17 +1,22 @@
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { Button } from "./ui/button";
+import ExpoIcon, { type ExpoIconType } from "./ui/icon";
 
-export default function BackButton() {
+interface Props {
+  icon?: ExpoIconType;
+}
+export default function BackButton({ icon }: Props) {
+  const router = useRouter();
   return (
     <Button
-      variant="ghost"
-      size="icon"
-      className="rounded-full"
       onPress={() => {
-        router.canGoBack() && router.back();
+        router.back();
       }}
+      size="icon"
+      shape="rounded"
+      variant="ghost"
     >
-      <Button.Icon size={20} name="arrow.backward" />
+      <ExpoIcon name={icon ?? "arrow-back"} size="xl" />
     </Button>
   );
 }
