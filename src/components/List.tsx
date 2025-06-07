@@ -10,12 +10,13 @@ import { useAnimatedScrollHandler } from "@/hooks/useAnimatedScrollHandler_FIXED
 import { useDedupe } from "@/hooks/useDedupe";
 import { useScrollHandlers } from "@/lib/ScrollContext";
 import { isAndroid, isIOS } from "@/platform/detection";
-import { FlatList_INTERNAL } from "./Views";
 import { useTheme } from "@react-navigation/native";
 import { addStyle } from "@/lib/styles";
 import { useBottomBarOffset } from "@/hooks/useBottomBarOffset";
+import { FlatList_INTERNAL } from "./Views";
 
 export type ListMethods = FlatList_INTERNAL;
+
 export type ListProps<ItemT = any> = Omit<
   FlatListPropsWithLayout<ItemT>,
   | "onMomentumScrollBegin" // Use ScrollContext instead.
@@ -38,7 +39,7 @@ export type ListProps<ItemT = any> = Omit<
   sideBorders?: boolean;
   progressViewOffset?: number;
 };
-export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>;
+export type ListRef = React.MutableRefObject<ListMethods | null>;
 
 const SCROLLED_DOWN_LIMIT = 200;
 
@@ -62,20 +63,18 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const dedupe = useDedupe(400);
 
     const paddingBottom = useBottomBarOffset();
-    // const { activeLightbox } = useLightbox();
 
     function handleScrolledDownChange(didScrollDown: boolean) {
       onScrolledDownChange?.(didScrollDown);
     }
 
-    // Intentionally destructured outside the main thread closure.
-    // See https://github.com/bluesky-social/social-app/pull/4108.
     const {
       onBeginDrag: onBeginDragFromContext,
       onEndDrag: onEndDragFromContext,
       onScroll: onScrollFromContext,
       onMomentumEnd: onMomentumEndFromContext,
     } = useScrollHandlers();
+
     const scrollHandler = useAnimatedScrollHandler({
       onBeginDrag(e, ctx) {
         onBeginDragFromContext?.(e, ctx);
@@ -99,8 +98,6 @@ let List = React.forwardRef<ListMethods, ListProps>(
           runOnJS(dedupe)(updateActiveVideoViewAsync);
         }
       },
-      // Note: adding onMomentumBegin here makes simulator scroll
-      // lag on Android. So either don't add it, or figure out why.
       onMomentumEnd(e, ctx) {
         runOnJS(updateActiveVideoViewAsync)();
         onMomentumEndFromContext?.(e, ctx);
@@ -153,7 +150,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
 
     return (
       <FlatList_INTERNAL
-        showsVerticalScrollIndicator={!isAndroid} // overridable
+        showsVerticalScrollIndicator={!isAndroid}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}
@@ -169,11 +166,15 @@ let List = React.forwardRef<ListMethods, ListProps>(
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
+        recycleItems
         indicatorStyle={theme.dark ? "white" : "black"}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
-        onScroll={scrollHandler}
+        estimatedItemSize={250}
+        drawDistance={100}
+        waitForInitialLayout={true}
         scrollEventThrottle={1}
+        onScroll={scrollHandler}
         style={style}
         // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
         ref={ref}
