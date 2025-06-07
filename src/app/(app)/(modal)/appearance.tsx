@@ -1,8 +1,7 @@
 import Layout from "@/components/Layout";
-import { HStack, Text, View, VStack } from "@/components/ui";
+import { HStack, Text, VStack } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import Spacer from "@/components/ui/spacer";
-import { Ionicons } from "@expo/vector-icons";
 import {
   MenuAction,
   MenuView,
@@ -10,17 +9,21 @@ import {
 } from "@react-native-menu/menu";
 import { useCallback, useMemo, useState } from "react";
 import { Platform } from "react-native";
+import { SchemeType, useTheme } from "@/context/theme-provider";
+import ExpoIcon from "@/components/ui/icon";
 
-type ColorMode = "system" | "light" | "dark";
 type DarkTheme = "dim" | "dark";
 export default function AppearanceScreen() {
-  const [selectedColorMode, setSelectedColorMode] =
-    useState<ColorMode>("system");
+  const { setColorScheme, currentScheme } = useTheme();
+  const [selectedColorMode, setSelectedColorMode] = useState<SchemeType>(
+    () => currentScheme
+  );
   const [selectedDarkTheme, setSelectedDarkTheme] = useState<DarkTheme>("dim");
 
   const onSelectColorMode = useCallback(
     ({ nativeEvent }: NativeActionEvent) => {
-      setSelectedColorMode(nativeEvent.event as ColorMode);
+      setColorScheme(nativeEvent.event as SchemeType);
+      setSelectedColorMode(nativeEvent.event as SchemeType);
     },
     []
   );
@@ -34,7 +37,7 @@ export default function AppearanceScreen() {
 
   const ColorModeActions: MenuAction[] = useMemo(
     () =>
-      (["system", "light", "dark"] as ColorMode[]).map((mode) => ({
+      (["system", "light", "dark"] as SchemeType[]).map((mode) => ({
         id: mode,
         title: mode.charAt(0).toUpperCase() + mode.slice(1),
         imageColor: "#000",
@@ -66,14 +69,14 @@ export default function AppearanceScreen() {
     [selectedDarkTheme]
   );
   return (
-    <Layout.Screen safeArea>
+    <Layout.ScrollView>
       <VStack className="m-4 rounded-lg gap-2 bg-transparent">
         <Text size="sm" className="text-gray-400">
           App Appearance
         </Text>
-        <VStack className="p-4 rounded-lg gap-6">
-          <HStack className="gap-1">
-            <Ionicons name="phone-portrait-outline" size={16} />
+        <VStack className="p-4 rounded-lg gap-6" darkColor="secondary">
+          <HStack darkColor="secondary">
+            <ExpoIcon name="phone-portrait-outline" />
             <Text>Color mode</Text>
             <Spacer />
             <MenuView
@@ -83,12 +86,12 @@ export default function AppearanceScreen() {
             >
               <Button asChild variant="ghost" size="sm" className="pr-0">
                 <Text className="capitalize">{selectedColorMode}</Text>
-                <Ionicons name="chevron-expand-outline" size={16} />
+                <ExpoIcon name="chevron-expand-outline" size="md" />
               </Button>
             </MenuView>
           </HStack>
-          <HStack className="gap-1">
-            <Ionicons name="moon-outline" size={16} />
+          <HStack darkColor="secondary">
+            <ExpoIcon name="moon-outline" />
             <Text>Dark theme</Text>
             <Spacer />
             <MenuView
@@ -97,12 +100,12 @@ export default function AppearanceScreen() {
             >
               <Button asChild variant="ghost" className="pr-0">
                 <Text className="capitalize">Dark</Text>
-                <Ionicons name="chevron-expand-outline" size={16} />
+                <ExpoIcon name="chevron-expand-outline" size="md" />
               </Button>
             </MenuView>
           </HStack>
         </VStack>
       </VStack>
-    </Layout.Screen>
+    </Layout.ScrollView>
   );
 }
