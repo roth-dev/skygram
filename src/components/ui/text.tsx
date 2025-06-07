@@ -20,7 +20,7 @@ const FONTS = {
   extrabold: "Inter_800ExtraBold",
 };
 
-const textVariants = cva("dark:text-white text-black", {
+const textVariants = cva("dark:text-white text-black bg-transparent", {
   variants: {
     size: {
       xs: "text-xs",
@@ -50,7 +50,7 @@ const Text = React.forwardRef<React.ElementRef<typeof BaseText>, TextProps>(
     return (
       <BaseText
         ref={ref}
-        className={cn(textVariants({ size }), className, "leading-relaxed")}
+        className={cn(textVariants({ size }), className, "leading-snug")}
         {...props}
         style={[
           {
