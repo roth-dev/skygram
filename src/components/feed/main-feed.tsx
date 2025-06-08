@@ -4,7 +4,7 @@ import {
   Dimensions,
   ListRenderItemInfo,
 } from "react-native";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useSession } from "@/state/session";
 import { List } from "@/components/List";
 import {
@@ -18,8 +18,7 @@ import { useBreakpoints } from "@/hooks/breakpoints";
 import { isIOS, isNative } from "@/platform/detection";
 import { useWebMediaQueries } from "@/hooks/useWebMediaQueries";
 import { useTrendingSettings } from "@/state/prefs/trending";
-import { logEvent } from "@/statsig/statsig";
-import { View } from "@/components/ui";
+import { Text, View } from "@/components/ui";
 import PostFeedItem from "@/components/feed/post-feed-item";
 import { FeedRow } from "./type";
 import { useInitialNumToRender } from "@/hooks/useInitialNumToRender";
@@ -27,7 +26,7 @@ import VideoPostFeed from "./video-post-feed";
 import { VideoFeedSourceContext } from "../video/type";
 import VideoTrendingGrid from "./video-trending-grid";
 
-export default memo(function Impl(props: MainFeedProps) {
+export default function MainFeed(props: MainFeedProps) {
   const {
     feed,
     feedParams,
@@ -311,17 +310,12 @@ export default memo(function Impl(props: MainFeedProps) {
   ]);
 
   const onRefresh = useCallback(async () => {
-    logEvent("feed:refresh", {
-      feedType: feedType,
-      feedUrl: feed,
-      reason: "pull-to-refresh",
-    });
     setIsPTRing(true);
     try {
       await refetch();
       // onHasNew?.(false)
     } catch (err) {
-      // logger.error('Failed to refresh posts feed', {message: err})
+      // logge.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false);
   }, [refetch, setIsPTRing, feed, feedType]);
@@ -329,11 +323,11 @@ export default memo(function Impl(props: MainFeedProps) {
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return;
 
-    logEvent("feed:endReached", {
-      feedType: feedType,
-      feedUrl: feed,
-      itemCount: feedItems.length,
-    });
+    // logEvent("feed:endReached", {
+    //   feedType: feedType,
+    //   feedUrl: feed,
+    //   itemCount: feedItems.length,
+    // });
     try {
       await fetchNextPage();
     } catch (err) {
@@ -388,6 +382,7 @@ export default memo(function Impl(props: MainFeedProps) {
       if (row.type === "interstitialTrendingVideos") {
         return <VideoTrendingGrid />;
       }
+
       return null;
     },
     []
@@ -409,10 +404,12 @@ export default memo(function Impl(props: MainFeedProps) {
         extraData={extraData}
         onRefresh={onRefresh}
         renderItem={renderItem}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={1}
         ref={scrollElRef}
         onEndReached={onEndReached}
         headerOffset={headerOffset}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={isIOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         keyExtractor={(item) => item.key}
         ListFooterComponent={renderFooter}
@@ -420,7 +417,6 @@ export default memo(function Impl(props: MainFeedProps) {
         onScrolledDownChange={onScrolledDownChange}
         ListHeaderComponent={ListHeaderComponent}
         showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={isIOS ? 5 : 1}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
@@ -432,4 +428,4 @@ export default memo(function Impl(props: MainFeedProps) {
       />
     </View>
   );
-});
+}
