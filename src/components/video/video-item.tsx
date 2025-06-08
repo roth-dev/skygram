@@ -141,7 +141,7 @@ function Overlay({
         <Pressable className="items-center">
           <ExpoIcon
             className="shadow-black shadow"
-            name="heart"
+            name="heart-outline"
             size="3xl"
             color={isLiked ? "red" : "white"}
           />
@@ -151,7 +151,7 @@ function Overlay({
         </Pressable>
         <Pressable className="items-center">
           <ExpoIcon
-            name="chatbox"
+            name="chatbubble-ellipses-outline"
             size="3xl"
             color="white"
             className="shadow-black shadow"
