@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { LayoutChangeEvent, ScrollView, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, ScrollView, StyleSheet } from "react-native";
 import Animated, {
   interpolate,
   runOnJS,
@@ -13,7 +13,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { PressableWithHover } from "../PressableWithHover";
-import { Text } from "../ui";
+import { Text, View } from "../ui";
 
 export interface TabBarProps {
   testID?: string;
@@ -30,6 +30,8 @@ const CONTENT_PADDING = 6;
 // How much of the previous/next item we're requiring
 // when deciding whether to scroll into view on tap.
 const OFFSCREEN_ITEM_WIDTH = 20;
+
+const AnimatedIndicatorView = Animated.createAnimatedComponent(View);
 
 export function TabBar({
   testID,
@@ -330,21 +332,23 @@ export function TabBar({
               />
             );
           })}
-          <Animated.View
+          <AnimatedIndicatorView
             style={[
               indicatorStyle,
-              {
-                position: "absolute",
-                left: 0,
-                bottom: 0,
-                right: 0,
-                borderBottomWidth: 2,
-              },
+              // {
+              //   position: "absolute",
+              //   left: 0,
+              //   bottom: 0,
+              //   right: 0,
+              //   borderBottomWidth: 2,
+              //   borderBottomColor: "red",
+              // },
             ]}
+            className="left-0 bottom-0 right-0 border-b-2 absolute dark:border-white"
           />
         </Animated.View>
       </ScrollView>
-      <View style={[styles.outerBottomBorder]} />
+      <View style={[styles.outerBottomBorder]} className="dark:border-white" />
     </View>
   );
 }
